@@ -1,0 +1,4 @@
+candidate_id,folds,total_net_pnl,total_slippage_4_ticks_net_pnl,trades,positive_folds,best_fold,best_fold_pnl,best_fold_concentration,worst_fold,worst_fold_pnl,max_test_best_day_concentration,max_test_best_trade_concentration,concentration_label,concentration_notes
+MNQ_opening_range_failure_tf1_982fe6172f,3,6296.085,5963.085,111,3,3,4035.215,0.640909,2,912.265,0.660466,0.499592,concentrated,day concentration inside test fold; trade concentration inside test fold
+MNQ_opening_range_failure_tf3_1dce415f36,3,5700.945,5364.945,112,3,3,3647.9,0.639876,1,979.965,0.561487,0.409345,concentrated,day concentration inside test fold; trade concentration inside test fold
+MNQ_opening_range_failure_tf5_763933a432,3,3839.075,3509.075,110,2,3,3433.19,0.894275,2,-247.37,1.0,1.0,concentrated,fold concentration; day concentration inside test fold; trade concentration inside test fold
