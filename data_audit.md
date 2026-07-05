@@ -19,15 +19,15 @@ Date generated: 2026-07-05
 
 | File | Symbols | Rows | First Timestamp | Last Timestamp | Complete Sessions | Latest Complete Session |
 | --- | --- | ---: | --- | --- | ---: | --- |
-| `mgc_1m_databento_20260403_20260703.csv` | MGC | 87,665 | `2026-04-05T18:00:00-04:00` | `2026-07-02T23:59:00-04:00` | 63 | `2026-07-02` |
-| `mnq_1m_databento_20260403_20260703.csv` | MNQ | 88,755 | `2026-04-03T00:00:00-04:00` | `2026-07-02T23:59:00-04:00` | 64 | `2026-07-02` |
+| `mgc_1m_databento_20230101_20260703.csv` | MGC | 1,211,601 | `2023-01-02T18:00:00-05:00` | `2026-07-02T23:59:00-04:00` | 877 | `2026-07-02` |
+| `mnq_1m_databento_20230101_20260703.csv` | MNQ | 1,239,427 | `2023-01-02T18:00:00-05:00` | `2026-07-02T23:59:00-04:00` | 901 | `2026-07-02` |
 
 ## Integrity Checks
 
 | File | Sorted | Duplicate Timestamp-Symbol Rows | Bad OHLC Rows | Zero Volume Rows | Negative Volume Rows | Price Range |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
-| `mgc_1m_databento_20260403_20260703.csv` | true | 0 | 0 | 0 | 0 | 3,955.30 to 4,914.00 |
-| `mnq_1m_databento_20260403_20260703.csv` | true | 0 | 0 | 0 | 0 | 23,941.50 to 30,967.75 |
+| `mgc_1m_databento_20230101_20260703.csv` | true | 0 | 0 | 0 | 0 | 1,811.20 to 5,587.00 |
+| `mnq_1m_databento_20230101_20260703.csv` | true | 0 | 0 | 0 | 0 | 10,751.00 to 30,967.75 |
 
 ## Session Coverage
 
@@ -35,8 +35,8 @@ A complete session is currently defined as at least `1,000` one-minute bars. Thi
 
 ### MGC
 
-- Sessions observed: `65`.
-- Complete sessions: `63`.
+- Sessions observed: `904`.
+- Complete sessions: `877`.
 - Latest complete session: `2026-07-02`.
 - Latest complete RTH bars: `390`.
 - Latest complete ETH bars: `990`.
@@ -55,8 +55,8 @@ A complete session is currently defined as at least `1,000` one-minute bars. Thi
 
 ### MNQ
 
-- Sessions observed: `66`.
-- Complete sessions: `64`.
+- Sessions observed: `906`.
+- Complete sessions: `901`.
 - Latest complete session: `2026-07-02`.
 - Latest complete RTH bars: `390`.
 - Latest complete ETH bars: `990`.
@@ -82,56 +82,59 @@ Configured closures:
 - Good Friday 2026: `2026-04-03T09:15:00-04:00` through `2026-04-05T18:00:00-04:00`
 - Juneteenth 2026 early close: `2026-06-19T13:00:00-04:00` through `2026-06-21T18:00:00-04:00`
 
-### mgc_1m_databento_20260403_20260703.csv
+### mgc_1m_databento_20230101_20260703.csv
 
-- Non-1-minute gap count: `286`.
+- Non-1-minute gap count: `11747`.
 - Most common gap lengths:
 
-  - `2` minutes: `120` occurrences
-  - `61` minutes: `50` occurrences
-  - `3` minutes: `49` occurrences
-  - `4` minutes: `15` occurrences
-  - `5` minutes: `12` occurrences
-  - `2941` minutes: `11` occurrences
-  - `6` minutes: `7` occurrences
-  - `7` minutes: `6` occurrences
+  - `2` minutes: `7638` occurrences
+  - `3` minutes: `1409` occurrences
+  - `61` minutes: `674` occurrences
+  - `4` minutes: `556` occurrences
+  - `5` minutes: `321` occurrences
+  - `6` minutes: `178` occurrences
+  - `2941` minutes: `159` occurrences
+  - `7` minutes: `125` occurrences
 
 - Sample gaps:
 
-  - `2026-04-06T16:59:00-04:00` to `2026-04-06T18:00:00-04:00`: `61` minutes
-  - `2026-04-07T16:59:00-04:00` to `2026-04-07T18:00:00-04:00`: `61` minutes
-  - `2026-04-08T16:59:00-04:00` to `2026-04-08T18:00:00-04:00`: `61` minutes
-  - `2026-04-09T16:59:00-04:00` to `2026-04-09T18:00:00-04:00`: `61` minutes
-  - `2026-04-10T16:59:00-04:00` to `2026-04-12T18:00:00-04:00`: `2941` minutes
-  - `2026-04-13T16:59:00-04:00` to `2026-04-13T18:00:00-04:00`: `61` minutes
-  - `2026-04-14T16:59:00-04:00` to `2026-04-14T18:00:00-04:00`: `61` minutes
-  - `2026-04-15T16:59:00-04:00` to `2026-04-15T18:00:00-04:00`: `61` minutes
-  - `2026-04-16T16:59:00-04:00` to `2026-04-16T18:00:00-04:00`: `61` minutes
-  - `2026-04-17T16:59:00-04:00` to `2026-04-19T18:00:00-04:00`: `2941` minutes
+  - `2023-01-03T16:03:00-05:00` to `2023-01-03T16:05:00-05:00`: `2` minutes
+  - `2023-01-03T16:13:00-05:00` to `2023-01-03T16:15:00-05:00`: `2` minutes
+  - `2023-01-03T16:59:00-05:00` to `2023-01-03T18:00:00-05:00`: `61` minutes
+  - `2023-01-03T18:28:00-05:00` to `2023-01-03T18:30:00-05:00`: `2` minutes
+  - `2023-01-03T18:33:00-05:00` to `2023-01-03T18:35:00-05:00`: `2` minutes
+  - `2023-01-03T18:47:00-05:00` to `2023-01-03T18:49:00-05:00`: `2` minutes
+  - `2023-01-03T19:06:00-05:00` to `2023-01-03T19:08:00-05:00`: `2` minutes
+  - `2023-01-03T23:10:00-05:00` to `2023-01-03T23:12:00-05:00`: `2` minutes
+  - `2023-01-03T23:31:00-05:00` to `2023-01-03T23:34:00-05:00`: `3` minutes
+  - `2023-01-04T00:14:00-05:00` to `2023-01-04T00:16:00-05:00`: `2` minutes
 
-### mnq_1m_databento_20260403_20260703.csv
+### mnq_1m_databento_20230101_20260703.csv
 
-- Non-1-minute gap count: `65`.
+- Non-1-minute gap count: `912`.
 - Most common gap lengths:
 
-  - `61` minutes: `51` occurrences
-  - `2941` minutes: `11` occurrences
-  - `3406` minutes: `1` occurrences
-  - `301` minutes: `1` occurrences
-  - `3181` minutes: `1` occurrences
+  - `61` minutes: `691` occurrences
+  - `2941` minutes: `164` occurrences
+  - `301` minutes: `23` occurrences
+  - `2` minutes: `6` occurrences
+  - `2881` minutes: `4` occurrences
+  - `4381` minutes: `4` occurrences
+  - `286` minutes: `3` occurrences
+  - `3001` minutes: `3` occurrences
 
 - Sample gaps:
 
-  - `2026-04-03T09:14:00-04:00` to `2026-04-05T18:00:00-04:00`: `3406` minutes
-  - `2026-04-06T16:59:00-04:00` to `2026-04-06T18:00:00-04:00`: `61` minutes
-  - `2026-04-07T16:59:00-04:00` to `2026-04-07T18:00:00-04:00`: `61` minutes
-  - `2026-04-08T16:59:00-04:00` to `2026-04-08T18:00:00-04:00`: `61` minutes
-  - `2026-04-09T16:59:00-04:00` to `2026-04-09T18:00:00-04:00`: `61` minutes
-  - `2026-04-10T16:59:00-04:00` to `2026-04-12T18:00:00-04:00`: `2941` minutes
-  - `2026-04-13T16:59:00-04:00` to `2026-04-13T18:00:00-04:00`: `61` minutes
-  - `2026-04-14T16:59:00-04:00` to `2026-04-14T18:00:00-04:00`: `61` minutes
-  - `2026-04-15T16:59:00-04:00` to `2026-04-15T18:00:00-04:00`: `61` minutes
-  - `2026-04-16T16:59:00-04:00` to `2026-04-16T18:00:00-04:00`: `61` minutes
+  - `2023-01-03T16:59:00-05:00` to `2023-01-03T18:00:00-05:00`: `61` minutes
+  - `2023-01-04T16:59:00-05:00` to `2023-01-04T18:00:00-05:00`: `61` minutes
+  - `2023-01-05T16:59:00-05:00` to `2023-01-05T18:00:00-05:00`: `61` minutes
+  - `2023-01-06T16:59:00-05:00` to `2023-01-08T18:00:00-05:00`: `2941` minutes
+  - `2023-01-09T16:59:00-05:00` to `2023-01-09T18:00:00-05:00`: `61` minutes
+  - `2023-01-10T16:59:00-05:00` to `2023-01-10T18:00:00-05:00`: `61` minutes
+  - `2023-01-11T16:59:00-05:00` to `2023-01-11T18:00:00-05:00`: `61` minutes
+  - `2023-01-12T16:59:00-05:00` to `2023-01-12T18:00:00-05:00`: `61` minutes
+  - `2023-01-13T16:59:00-05:00` to `2023-01-15T18:00:00-05:00`: `2941` minutes
+  - `2023-01-16T12:59:00-05:00` to `2023-01-16T18:00:00-05:00`: `301` minutes
 
 ## Limitations And Uncertainties
 

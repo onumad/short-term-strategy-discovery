@@ -1,3 +1,4 @@
 pandas>=2.2
 numpy>=2.0
 matplotlib>=3.9
+databento>=0.80
