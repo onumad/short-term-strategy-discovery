@@ -1,0 +1,3 @@
+symbol,rows,sessions,first_timestamp,last_timestamp,schema_columns,nonnull_prior_session_range,nonnull_overnight_range,nonnull_or_width_30m
+MGC,342237,903,2023-01-03 09:30:00-05:00,2026-07-02 15:59:00-04:00,40,341847,342237,315224
+MNQ,345960,902,2023-01-03 09:30:00-05:00,2026-07-02 15:59:00-04:00,40,345570,345960,318900

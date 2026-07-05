@@ -1,0 +1,111 @@
+from __future__ import annotations
+
+import sys
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = PROJECT_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from short_term_edge.features import (  # noqa: E402
+    PHASE5B_FEATURE_SCHEMA,
+    build_phase5b_feature_dataset,
+    export_phase5b_features,
+    load_project_bars,
+    summarize_phase5b_features,
+)
+
+
+def main() -> None:
+    output_dir = PROJECT_ROOT / "outputs"
+    report_dir = PROJECT_ROOT / "reports"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    report_dir.mkdir(parents=True, exist_ok=True)
+
+    bars = load_project_bars(PROJECT_ROOT)
+    features = build_phase5b_feature_dataset(bars, symbols=("MNQ", "MGC"))
+    summary = summarize_phase5b_features(features)
+
+    feature_path = output_dir / "phase5b_features.parquet"
+    summary_path = output_dir / "phase5b_feature_summary.csv"
+    report_path = report_dir / "phase5b_feature_report.md"
+    export_phase5b_features(features, feature_path)
+    summary.to_csv(summary_path, index=False)
+    report_path.write_text(_report(features, summary, feature_path, summary_path), encoding="utf-8")
+
+    print("Phase 5B feature build complete.")
+    print(f"Feature dataset: {feature_path}")
+    print(f"Summary: {summary_path}")
+    print(f"Report: {report_path}")
+    print(f"Rows exported: {len(features)}")
+    print(f"Columns exported: {len(features.columns)}")
+    if not summary.empty:
+        ordered = summary.sort_values("symbol", ascending=False)  # MNQ before MGC for readout.
+        for _, row in ordered.iterrows():
+            print(f"{row['symbol']}: rows={int(row['rows'])} sessions={int(row['sessions'])}")
+
+
+def _report(features, summary, feature_path: Path, summary_path: Path) -> str:
+    now = datetime.now(ZoneInfo("America/New_York"))
+    lines = [
+        "# Phase 5B Deterministic Feature/Regime Engine Report",
+        "",
+        f"Date generated: {now.date()} {now.strftime('%H:%M:%S %Z')}",
+        "",
+        "## Scope And Guardrails",
+        "",
+        "- Research/simulation only; no live trading, broker adapters, order routing, webhooks, or automated execution were added.",
+        "- The script loads existing local CSV files under `data/raw` only and does not download data.",
+        "- Outputs are deterministic feature datasets for offline research and search, not live signals.",
+        "- Focus order is MNQ first, then MGC; both symbols are exported with the same stable schema.",
+        "",
+        "## Outputs",
+        "",
+        f"- Feature dataset: `{feature_path}`",
+        f"- Feature summary: `{summary_path}`",
+        f"- Report: `{PROJECT_ROOT / 'reports' / 'phase5b_feature_report.md'}`",
+        "",
+        "## Stable Feature Schema",
+        "",
+        f"- Columns: `{len(PHASE5B_FEATURE_SCHEMA)}`",
+        "- Key feature groups: prior-session range/return, overnight range, gap, opening-range width, realized volatility, trend/slope, volume regime, calendar features, and RTH cumulative summaries.",
+        "- Offline labels are isolated under `label_*`; non-label columns are intended to be available at or before the bar close.",
+        "",
+        "## Symbol Summary",
+        "",
+    ]
+    if summary.empty:
+        lines.append("- No features were generated.")
+    else:
+        lines.extend(["| Symbol | Rows | Sessions | First Timestamp | Last Timestamp | OR Width Rows | Overnight Rows |", "| --- | ---: | ---: | --- | --- | ---: | ---: |"])
+        for _, row in summary.sort_values("symbol", ascending=False).iterrows():
+            lines.append(
+                f"| {row['symbol']} | {int(row['rows'])} | {int(row['sessions'])} | {row['first_timestamp']} | {row['last_timestamp']} | {int(row['nonnull_or_width_30m'])} | {int(row['nonnull_overnight_range'])} |"
+            )
+    lines.extend(
+        [
+            "",
+            "## No-Lookahead Notes",
+            "",
+            "- Prior-session high/low/close/range/return are shifted by completed trading session.",
+            "- Overnight high/low/range use ETH bars before that session's RTH open and are available at 09:30 ET.",
+            "- Current RTH high/low/range and volume are cumulative through the current row only.",
+            "- Opening-range high/low/width remain null until the 30-minute window has completed.",
+            "- Forward returns are label columns only and are excluded from strategy-spec search inputs by convention.",
+            "",
+            "## Repro Command",
+            "",
+            "```bash",
+            "./.venv/Scripts/python.exe scripts/run_phase5b_features.py",
+            "```",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+if __name__ == "__main__":
+    main()
