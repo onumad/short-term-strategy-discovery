@@ -1,0 +1,83 @@
+[
+  {
+    "entry": {
+      "name": "close_back_inside",
+      "params": {
+        "min_range": 10.0,
+        "or_minutes": 30,
+        "target": "opposite"
+      }
+    },
+    "exit": {
+      "name": "range_target",
+      "params": {
+        "target": "opposite"
+      }
+    },
+    "family": "opening_range_failure",
+    "instrument": "MNQ",
+    "notes": "Deterministic AI-search proposal: fade failed opening-range break after bar closes back inside.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 2
+      }
+    },
+    "timeframe": 3,
+    "version": 1
+  },
+  {
+    "entry": {
+      "name": "close_back_inside",
+      "params": {
+        "min_range": 10.0,
+        "or_minutes": 30,
+        "target": "opposite"
+      }
+    },
+    "exit": {
+      "name": "range_target",
+      "params": {
+        "target": "opposite"
+      }
+    },
+    "family": "opening_range_failure",
+    "instrument": "MNQ",
+    "notes": "Deterministic AI-search proposal: fade failed opening-range break after bar closes back inside.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 2
+      }
+    },
+    "timeframe": 1,
+    "version": 1
+  },
+  {
+    "entry": {
+      "name": "close_back_inside",
+      "params": {
+        "min_range": 10.0,
+        "or_minutes": 30,
+        "target": "opposite"
+      }
+    },
+    "exit": {
+      "name": "range_target",
+      "params": {
+        "target": "opposite"
+      }
+    },
+    "family": "opening_range_failure",
+    "instrument": "MNQ",
+    "notes": "Deterministic AI-search proposal: fade failed opening-range break after bar closes back inside.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 2
+      }
+    },
+    "timeframe": 5,
+    "version": 1
+  }
+]
