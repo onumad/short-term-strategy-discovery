@@ -1,6 +1,6 @@
 # Phase 5A AI Strategy Finder Foundation Report
 
-Date generated: 2026-07-05 01:53:02 EDT
+Date generated: 2026-07-05 01:53:32 EDT
 
 ## Scope And Guardrails
 
@@ -45,7 +45,7 @@ The feature builder creates inspectable no-lookahead columns: session VWAP, EMA/
 | 4 | `MNQ_opening_range_failure_tf1_812c066564` | opening_range_failure | 1m | watchlist | 60.17 | $1486.62 | $1085.07 | $1240.62 | 82 | 88.9% | one-day concentration risk |
 | 5 | `MNQ_opening_range_failure_tf1_41b10f5cee` | opening_range_failure | 1m | paper_research_candidate | 58.39 | $1537.86 | $612.36 | $1369.86 | 56 | 88.9% | No major Phase 5A risk flags. |
 | 6 | `MNQ_opening_range_breakout_tf1_a3cbc18936` | opening_range_breakout | 1m | watchlist | 58.20 | $2642.98 | $836.08 | $2498.98 | 48 | 76.2% | one-trade concentration risk |
-| 7 | `MNQ_opening_range_failure_tf1_61f4235e9e` | opening_range_failure | 1m | paper_research_candidate | 43.84 | $900.56 | $764.51 | $582.56 | 106 | 95.2% | negative validation PnL |
+| 7 | `MNQ_opening_range_failure_tf1_61f4235e9e` | opening_range_failure | 1m | watchlist | 43.84 | $900.56 | $764.51 | $582.56 | 106 | 95.2% | negative validation PnL |
 | 8 | `MNQ_opening_range_failure_tf3_8fc1ffc34b` | opening_range_failure | 3m | paper_research_candidate | 42.51 | $821.16 | $451.80 | $647.16 | 58 | 92.1% | No major Phase 5A risk flags. |
 | 9 | `MNQ_opening_range_failure_tf1_454ba8d5ae` | opening_range_failure | 1m | paper_research_candidate | 41.29 | $950.60 | $321.13 | $770.60 | 60 | 95.2% | No major Phase 5A risk flags. |
 | 10 | `MNQ_opening_range_failure_tf3_ab6ebea02e` | opening_range_failure | 3m | watchlist | 40.47 | $848.12 | $725.19 | $536.12 | 104 | 92.1% | negative validation PnL; one-day concentration risk; one-trade concentration risk |
@@ -54,7 +54,7 @@ The feature builder creates inspectable no-lookahead columns: session VWAP, EMA/
 
 ## Initial Readout
 
-- Label counts: `{'watchlist': 13, 'rejected': 12, 'paper_research_candidate': 6, 'interesting_but_needs_validation': 1}`
+- Label counts: `{'watchlist': 14, 'rejected': 12, 'paper_research_candidate': 5, 'interesting_but_needs_validation': 1}`
 - Treat all positive results as candidates for further walk-forward / out-of-sample review, not deployable systems.
 - Concentration, low coverage, negative holdout, and strict-slippage failures are intentionally conservative risk flags.
 
