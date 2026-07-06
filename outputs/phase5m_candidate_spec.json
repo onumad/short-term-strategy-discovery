@@ -1,0 +1,26 @@
+{
+  "entry": {
+    "name": "vwap_cross",
+    "params": {
+      "mode": "both"
+    }
+  },
+  "exit": {
+    "name": "fixed_ticks",
+    "params": {
+      "stop_ticks": 40,
+      "target_ticks": 60
+    }
+  },
+  "family": "vwap_reclaim_rejection",
+  "instrument": "MNQ",
+  "notes": "Deterministic AI-search proposal: VWAP reclaim/rejection confirmation.",
+  "risk": {
+    "name": "one_open_position",
+    "params": {
+      "max_trades_per_day": 2
+    }
+  },
+  "timeframe": 1,
+  "version": 1
+}
