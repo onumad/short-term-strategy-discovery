@@ -1,0 +1,7 @@
+failure_mode,count
+drawdown exceeds prefilter cap,48
+one-day concentration risk,48
+one-trade concentration risk,48
+fails aggregate 4-tick slippage stress,46
+negative validation split,39
+negative holdout split,37
