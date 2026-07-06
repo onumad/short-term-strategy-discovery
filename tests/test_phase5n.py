@@ -11,7 +11,13 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from short_term_edge.phase5n import Phase5NConfig, rank_prefilter_results, score_prefilter_specs, select_prefilter_specs
+from short_term_edge.phase5n import (
+    Phase5NConfig,
+    _score_spec_with_signal_cache,
+    rank_prefilter_results,
+    score_prefilter_specs,
+    select_prefilter_specs,
+)
 
 
 class Phase5NTests(unittest.TestCase):
@@ -154,6 +160,43 @@ class Phase5NTests(unittest.TestCase):
         self.assertEqual(calls, [spec.canonical_id() for spec in specs[1:]])
         self.assertEqual(set(ranked["candidate_id"]), {spec.canonical_id() for spec in specs})
         self.assertIn("phase5n_rank", ranked.columns)
+
+    def test_score_spec_with_signal_cache_reuses_signals_for_same_signal_rules(self) -> None:
+        specs = select_prefilter_specs(Phase5NConfig(max_specs=40, min_specs=40))[:2]
+        self.assertEqual(specs[0].family, specs[1].family)
+        self.assertEqual(specs[0].entry.params, specs[1].entry.params)
+        self.assertEqual(specs[0].exit.params, specs[1].exit.params)
+
+        signal_calls = 0
+
+        def generate_signals(signal_bars, full_df, candidate):
+            nonlocal signal_calls
+            signal_calls += 1
+            return []
+
+        def simulate(one_minute, signals, candidate, instrument, complete_sessions):
+            return pd.DataFrame()
+
+        class DummyScore:
+            def __init__(self, spec) -> None:
+                self.spec = spec
+
+        def score(spec, trades, instrument, complete_sessions):
+            return DummyScore(spec)
+
+        cache = {}
+        prepared = {"MNQ": {"full": pd.DataFrame(), "one_minute": pd.DataFrame(), "timeframes": {1: pd.DataFrame()}}}
+
+        first = _score_spec_with_signal_cache(
+            specs[0], prepared, [], cache, generate_signals=generate_signals, simulate=simulate, score=score
+        )
+        second = _score_spec_with_signal_cache(
+            specs[1], prepared, [], cache, generate_signals=generate_signals, simulate=simulate, score=score
+        )
+
+        self.assertIs(first.spec, specs[0])
+        self.assertIs(second.spec, specs[1])
+        self.assertEqual(signal_calls, 1)
 
 
 if __name__ == "__main__":

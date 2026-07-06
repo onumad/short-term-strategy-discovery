@@ -8,9 +8,11 @@ from typing import Any, Callable
 
 import pandas as pd
 
-from .ai_search import SearchConfig, _score_spec, propose_strategy_specs
+from .ai_search import SearchConfig, _score_spec, propose_strategy_specs, spec_to_phase4_candidate
 from .data_loader import discover_data_files, load_ohlcv_csv
-from .phase4a import resample_signal_bars
+from .instruments import get_instrument
+from .phase4a import generate_phase4a_signals, resample_signal_bars, simulate_phase4a_candidate
+from .scoring import score_candidate_trades
 from .strategy_spec import StrategySpec
 from .walk_forward import shared_complete_sessions
 
@@ -142,15 +144,55 @@ def score_prefilter_specs(
             completed_ids = {str(candidate_id) for candidate_id in existing["candidate_id"]}
 
     pending = [spec for spec in specs if spec.canonical_id() not in completed_ids]
+    signal_cache: dict[tuple[Any, ...], list[dict[str, Any]]] = {}
     for start in range(0, len(pending), batch_size):
         batch = pending[start : start + batch_size]
         for spec in batch:
-            rows.append(score_func(spec, prepared, complete_sessions).to_dict())
+            if score_func is _score_spec:
+                rows.append(_score_spec_with_signal_cache(spec, prepared, complete_sessions, signal_cache).to_dict())
+            else:
+                rows.append(score_func(spec, prepared, complete_sessions).to_dict())
         if checkpoint_path is not None:
             checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
             pd.DataFrame(rows).drop_duplicates("candidate_id", keep="first").to_csv(checkpoint_path, index=False)
             print(f"Phase 5N checkpoint: {len(rows)}/{len(specs)} specs scored -> {checkpoint_path}", flush=True)
     return rank_prefilter_results(pd.DataFrame(rows))
+
+
+def _score_spec_with_signal_cache(
+    spec: StrategySpec,
+    prepared: dict[str, dict[str, Any]],
+    complete_sessions: list[Any],
+    signal_cache: dict[tuple[Any, ...], list[dict[str, Any]]],
+    *,
+    generate_signals: Callable[[pd.DataFrame, pd.DataFrame, Any], list[dict[str, Any]]] = generate_phase4a_signals,
+    simulate: Callable[[pd.DataFrame, list[dict[str, Any]], Any, Any, list[Any]], pd.DataFrame] = simulate_phase4a_candidate,
+    score: Callable[[StrategySpec, pd.DataFrame, Any, list[Any]], Any] = score_candidate_trades,
+) -> Any:
+    """Score one spec while reusing expensive signal generation across equivalent signal rules."""
+    symbol_data = prepared.get(spec.instrument)
+    if symbol_data is None:
+        raise ValueError(f"No prepared data for {spec.instrument}")
+    phase4_candidate = spec_to_phase4_candidate(spec)
+    signal_key = _signal_cache_key(spec)
+    if signal_key not in signal_cache:
+        signal_bars = symbol_data["timeframes"][spec.timeframe]
+        signal_cache[signal_key] = generate_signals(signal_bars, symbol_data["full"], phase4_candidate)
+    instrument = get_instrument(spec.instrument)
+    trades = simulate(symbol_data["one_minute"], signal_cache[signal_key], phase4_candidate, instrument, complete_sessions)
+    return score(spec, trades, instrument, complete_sessions)
+
+
+def _signal_cache_key(spec: StrategySpec) -> tuple[Any, ...]:
+    return (
+        spec.instrument,
+        int(spec.timeframe),
+        spec.family,
+        spec.entry.name,
+        json.dumps(spec.entry.params, sort_keys=True),
+        spec.exit.name,
+        json.dumps(spec.exit.params, sort_keys=True),
+    )
 
 
 def _prepare_phase5n_symbol_data(full_data: pd.DataFrame, complete_sessions: list[Any], timeframes: tuple[int, ...]) -> dict[str, dict[str, Any]]:
