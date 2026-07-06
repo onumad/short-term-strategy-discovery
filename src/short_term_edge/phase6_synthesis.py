@@ -89,6 +89,15 @@ def render_phase6_failure_synthesis(phase6a_results: pd.DataFrame, phase6b_resul
     lines.extend(
         [
             "",
+            "## Source Artifacts And Repro Commands",
+            "",
+            "- Phase 6A results: `outputs/phase6a_expansion_results.csv`.",
+            "- Phase 6B results: `outputs/phase6b_ambiguity_reduction_results.csv`.",
+            "- Phase 6A failure modes: `outputs/phase6a_failure_modes.csv`.",
+            "- This report: `reports/phase6_failure_synthesis_report.md`.",
+            "- Regenerate synthesis: `./.venv/Scripts/python.exe scripts/run_phase6_failure_synthesis.py`.",
+            "- Canonical verification: `./.venv/Scripts/python.exe -m unittest discover -s tests -v`.",
+            "",
             "## Interpretation",
             "",
             "- Phase 6A failed primarily on concentration, drawdown, and cost/slippage resilience rather than lack of raw opportunity.",
