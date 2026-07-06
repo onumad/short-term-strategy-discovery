@@ -22,6 +22,16 @@ def summarize_note_counts(results: pd.DataFrame, note_columns: Iterable[str]) ->
     return pd.DataFrame(rows).sort_values(["count", "failure_mode"], ascending=[False, True]).set_index("failure_mode")
 
 
+def summarize_failure_categories(failure_modes: pd.DataFrame) -> pd.DataFrame:
+    category_counts: Counter[str] = Counter()
+    for failure_mode, row in failure_modes.iterrows():
+        category_counts[_failure_category(str(failure_mode))] += int(row["count"])
+    rows = [{"failure_category": category, "count": count} for category, count in category_counts.items()]
+    if not rows:
+        return pd.DataFrame(columns=["failure_category", "count"]).set_index("failure_category")
+    return pd.DataFrame(rows).sort_values(["count", "failure_category"], ascending=[False, True]).set_index("failure_category")
+
+
 def render_phase6_failure_synthesis(phase6a_results: pd.DataFrame, phase6b_results: pd.DataFrame) -> str:
     phase6a_count = _candidate_count(phase6a_results)
     phase6b_count = _candidate_count(phase6b_results)
@@ -33,6 +43,7 @@ def render_phase6_failure_synthesis(phase6a_results: pd.DataFrame, phase6b_resul
         pd.concat([phase6a_results, phase6b_results], ignore_index=True, sort=False),
         ("phase6a_notes", "phase6b_notes"),
     )
+    failure_categories = summarize_failure_categories(combined_failure_modes)
     phase6b_survivors = _survivor_count(phase6b_results)
 
     lines = [
@@ -73,6 +84,8 @@ def render_phase6_failure_synthesis(phase6a_results: pd.DataFrame, phase6b_resul
     lines.extend(_failure_mode_table(phase6b_failure_modes))
     lines.extend(["", "### Combined Phase 6", ""])
     lines.extend(_failure_mode_table(combined_failure_modes))
+    lines.extend(["", "### Failure Category Totals", ""])
+    lines.extend(_failure_category_table(failure_categories))
     lines.extend(
         [
             "",
@@ -150,6 +163,30 @@ def _failure_mode_table(failure_modes: pd.DataFrame) -> list[str]:
     for failure_mode, row in failure_modes.head(12).iterrows():
         lines.append(f"| {failure_mode} | {int(row['count'])} |")
     return lines
+
+
+def _failure_category_table(failure_categories: pd.DataFrame) -> list[str]:
+    if failure_categories.empty:
+        return ["No failure categories were available."]
+    lines = ["| Failure Category | Count |", "| --- | ---: |"]
+    for failure_category, row in failure_categories.iterrows():
+        lines.append(f"| {failure_category} | {int(row['count'])} |")
+    return lines
+
+
+def _failure_category(failure_mode: str) -> str:
+    lowered = failure_mode.lower()
+    if "concentration" in lowered:
+        return "concentration"
+    if "slippage" in lowered or "cost" in lowered:
+        return "cost_slippage"
+    if "drawdown" in lowered:
+        return "drawdown"
+    if "validation" in lowered or "holdout" in lowered or "split" in lowered:
+        return "split_instability"
+    if "ambiguity" in lowered or "same-bar" in lowered:
+        return "ambiguity"
+    return "other"
 
 
 def _float(value: object) -> float:
