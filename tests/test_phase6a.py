@@ -11,7 +11,7 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from short_term_edge.phase6a import Phase6AConfig, _limit_specs_for_run, rank_phase6a_results, select_phase6a_specs
+from short_term_edge.phase6a import Phase6AConfig, _limit_specs_for_run, rank_phase6a_results, run_phase6a_expansion, select_phase6a_specs
 
 
 class Phase6ATests(unittest.TestCase):
@@ -89,6 +89,43 @@ class Phase6ATests(unittest.TestCase):
             checkpoint_path.unlink(missing_ok=True)
 
         self.assertEqual([spec.canonical_id() for spec in limited], [spec.canonical_id() for spec in specs[:3]])
+
+    def test_limit_specs_for_run_allows_zero_new_specs_for_checkpoint_refresh(self) -> None:
+        Phase6AConfig(max_new_specs_per_run=0).validate()
+        specs = select_phase6a_specs(Phase6AConfig(max_specs=48, min_specs=40))[:4]
+        checkpoint_path = PROJECT_ROOT / ".hermes" / "tmp_phase6a_refresh_test.csv"
+        checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+        checkpoint_path.write_text(
+            f"candidate_id\n{specs[0].canonical_id()}\n{specs[1].canonical_id()}\n",
+            encoding="utf-8",
+        )
+        try:
+            limited = _limit_specs_for_run(specs, checkpoint_path, max_new_specs=0)
+        finally:
+            checkpoint_path.unlink(missing_ok=True)
+
+        self.assertEqual([spec.canonical_id() for spec in limited], [spec.canonical_id() for spec in specs[:2]])
+
+    def test_run_phase6a_expansion_zero_new_specs_refreshes_checkpoint_without_data_load(self) -> None:
+        specs = select_phase6a_specs(Phase6AConfig(max_specs=48, min_specs=40))[:1]
+        checkpoint_path = PROJECT_ROOT / ".hermes" / "tmp_phase6a_zero_refresh_test.csv"
+        checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+        checkpoint_path.write_text(
+            "candidate_id,instrument,family,timeframe,ranking_score,net_pnl,slippage_4_ticks_net_pnl,trades,active_session_pct,max_drawdown,best_day_concentration,best_trade_concentration,validation_pnl,holdout_pnl,risk_notes\n"
+            f"{specs[0].canonical_id()},MNQ,{specs[0].family},{specs[0].timeframe},1,10,5,80,0.5,-100,0.1,0.1,1,1,existing\n",
+            encoding="utf-8",
+        )
+        try:
+            result = run_phase6a_expansion(
+                PROJECT_ROOT / "path_that_should_not_be_read",
+                Phase6AConfig(max_new_specs_per_run=0),
+                checkpoint_path=checkpoint_path,
+            )
+        finally:
+            checkpoint_path.unlink(missing_ok=True)
+
+        self.assertEqual(result.search_results.iloc[0]["candidate_id"], specs[0].canonical_id())
+        self.assertEqual(result.complete_sessions, [])
 
     def test_rank_phase6a_results_handles_resumed_ranked_checkpoint_rows(self) -> None:
         rows = pd.DataFrame(

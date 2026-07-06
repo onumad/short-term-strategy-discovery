@@ -34,8 +34,12 @@ def main() -> None:
     print(f"Search results: {results_path}")
     print(f"Candidate specs: {specs_path}")
     print(f"Report: {report_path}")
-    print(f"Evaluated specs: {len(result.specs)}")
-    print(f"Complete MNQ sessions: {len(result.complete_sessions)}")
+    completed = int(result.search_results["candidate_id"].nunique()) if not result.search_results.empty else 0
+    print(f"Candidate specs: {len(result.specs)} selected; {completed} scored in checkpoint")
+    if config.max_new_specs_per_run == 0 and not result.complete_sessions:
+        print("Complete MNQ sessions: not recomputed during checkpoint-only refresh")
+    else:
+        print(f"Complete MNQ sessions: {len(result.complete_sessions)}")
     if not result.search_results.empty:
         top = result.search_results.iloc[0]
         survivors = int(result.search_results["phase6a_label"].eq("prefilter_survivor").sum())
@@ -70,7 +74,7 @@ def _report(config: Phase6AConfig, result, results_path: Path, specs_path: Path,
         f"- Timeframes: `{config.timeframes}`",
         f"- Opening-range minutes: `{config.opening_range_minutes}`",
         "- New dimensions include 2-minute signal bars, 5/90-minute opening ranges, 20/30 and wider 40/80 and 60/120 fixed-tick exits.",
-        f"- Complete MNQ sessions: `{len(result.complete_sessions)}`",
+        _complete_sessions_line(config, result),
         f"- Label counts: `{labels}`",
         "",
         "## Outputs",
@@ -113,6 +117,12 @@ def _report(config: Phase6AConfig, result, results_path: Path, specs_path: Path,
         ]
     )
     return "\n".join(lines)
+
+
+def _complete_sessions_line(config: Phase6AConfig, result) -> str:
+    if config.max_new_specs_per_run == 0 and not result.complete_sessions:
+        return "- Complete MNQ sessions: not recomputed during checkpoint-only refresh"
+    return f"- Complete MNQ sessions: `{len(result.complete_sessions)}`"
 
 
 if __name__ == "__main__":

@@ -30,8 +30,8 @@ class Phase6AConfig:
             raise ValueError("max_specs must be greater than or equal to min_specs")
         if self.batch_size < 1:
             raise ValueError("batch_size must be positive")
-        if self.max_new_specs_per_run is not None and self.max_new_specs_per_run < 1:
-            raise ValueError("max_new_specs_per_run must be positive when provided")
+        if self.max_new_specs_per_run is not None and self.max_new_specs_per_run < 0:
+            raise ValueError("max_new_specs_per_run must be non-negative when provided")
         if any(int(tf) <= 0 for tf in self.timeframes):
             raise ValueError("timeframes must be positive")
         if any(int(minutes) <= 0 for minutes in self.opening_range_minutes):
@@ -127,6 +127,10 @@ def select_phase6a_specs(config: Phase6AConfig = Phase6AConfig()) -> list[Strate
 def run_phase6a_expansion(project_root: Path, config: Phase6AConfig = Phase6AConfig(), checkpoint_path: Path | None = None) -> Phase5NResult:
     config.validate()
     specs = select_phase6a_specs(config)
+    if config.max_new_specs_per_run == 0:
+        if checkpoint_path is None or not checkpoint_path.exists():
+            return Phase5NResult(search_results=rank_phase6a_results(pd.DataFrame()), specs=specs, complete_sessions=[])
+        return Phase5NResult(search_results=rank_phase6a_results(pd.read_csv(checkpoint_path)), specs=specs, complete_sessions=[])
     specs_for_run = _limit_specs_for_run(specs, checkpoint_path, config.max_new_specs_per_run)
     prepared, complete_sessions = _prepare_phase6a_data(project_root, config)
     prepared_result = score_prefilter_specs(
