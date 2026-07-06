@@ -161,6 +161,11 @@ def _score_spec(spec: StrategySpec, prepared: dict[str, dict[str, Any]], complet
 def spec_to_phase4_candidate(spec: StrategySpec) -> Phase4ACandidate:
     spec.validate()
     params = _phase4_params(spec)
+    side_filter = str(spec.risk.params.get("side_filter", "both"))
+    if side_filter not in {"both", "long", "short"}:
+        raise ValueError("side_filter must be one of: both, long, short")
+    if side_filter != "both":
+        params["side_filter"] = side_filter
     max_trades = int(spec.risk.params.get("max_trades_per_day", 1))
     mode = ExecutionMode(
         "phase5_one_open_position" if max_trades == 1 else "phase5_max2_one_open_position",

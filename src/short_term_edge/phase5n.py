@@ -178,9 +178,18 @@ def _score_spec_with_signal_cache(
     if signal_key not in signal_cache:
         signal_bars = symbol_data["timeframes"][spec.timeframe]
         signal_cache[signal_key] = generate_signals(signal_bars, symbol_data["full"], phase4_candidate)
+    signals = filter_signals_by_side(signal_cache[signal_key], str(phase4_candidate.params.get("side_filter", "both")))
     instrument = get_instrument(spec.instrument)
-    trades = simulate(symbol_data["one_minute"], signal_cache[signal_key], phase4_candidate, instrument, complete_sessions)
+    trades = simulate(symbol_data["one_minute"], signals, phase4_candidate, instrument, complete_sessions)
     return score(spec, trades, instrument, complete_sessions)
+
+
+def filter_signals_by_side(signals: list[dict[str, Any]], side_filter: str = "both") -> list[dict[str, Any]]:
+    if side_filter == "both":
+        return signals
+    if side_filter not in {"long", "short"}:
+        raise ValueError("side_filter must be one of: both, long, short")
+    return [signal for signal in signals if str(signal.get("side")) == side_filter]
 
 
 def _signal_cache_key(spec: StrategySpec) -> tuple[Any, ...]:
