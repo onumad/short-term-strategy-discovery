@@ -180,6 +180,7 @@ def summarize_walk_forward(fold_results: pd.DataFrame) -> pd.DataFrame:
         first = group.iloc[0]
         test_positive = int((test["net_pnl"] > 0).sum())
         folds = int(test["fold"].nunique())
+        active_denominator = test_sessions_total(test)
         row = {
             "candidate_id": candidate_id,
             "instrument": first["instrument"],
@@ -191,7 +192,7 @@ def summarize_walk_forward(fold_results: pd.DataFrame) -> pd.DataFrame:
             "test_slippage_4_ticks_net_pnl": round(float(test["slippage_4_ticks_net_pnl"].sum()), 4),
             "test_trades": int(test["trades"].sum()),
             "test_active_sessions": int(test["active_sessions"].sum()),
-            "test_active_session_pct": round(float(test["active_sessions"].sum() / test_sessions_total(test)), 6),
+            "test_active_session_pct": round(float(test["active_sessions"].sum() / active_denominator), 6) if active_denominator else 0.0,
             "test_win_rate": round(weighted_mean(test, "win_rate", "trades"), 6),
             "test_avg_trade": round(weighted_mean(test, "avg_trade", "trades"), 6),
             "worst_test_fold_pnl": round(float(test["net_pnl"].min()), 4),

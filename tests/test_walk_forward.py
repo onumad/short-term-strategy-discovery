@@ -11,7 +11,13 @@ if str(SRC_ROOT) not in sys.path:
 
 import pandas as pd
 
-from short_term_edge.walk_forward import WalkForwardConfig, apply_walk_forward_promotion, generate_walk_forward_folds, shared_complete_sessions
+from short_term_edge.walk_forward import (
+    WalkForwardConfig,
+    apply_walk_forward_promotion,
+    generate_walk_forward_folds,
+    shared_complete_sessions,
+    summarize_walk_forward,
+)
 
 
 class WalkForwardTests(unittest.TestCase):
@@ -78,6 +84,31 @@ class WalkForwardTests(unittest.TestCase):
         rejected = apply_walk_forward_promotion(fragile)
         self.assertEqual(rejected["phase5d_label"], "rejected")
         self.assertIn("insufficient positive test folds", rejected["phase5d_notes"])
+
+    def test_summarize_walk_forward_handles_zero_active_test_sessions(self) -> None:
+        base = {
+            "candidate_id": "empty_filter",
+            "instrument": "MNQ",
+            "family": "vwap_reclaim_rejection",
+            "timeframe": 1,
+            "fold": 1,
+            "net_pnl": 0.0,
+            "slippage_4_ticks_net_pnl": 0.0,
+            "trades": 0,
+            "active_sessions": 0,
+            "active_session_pct": 0.0,
+            "win_rate": 0.0,
+            "avg_trade": 0.0,
+            "max_drawdown": 0.0,
+            "best_day_concentration": 0.0,
+            "best_trade_concentration": 0.0,
+        }
+        rows = pd.DataFrame([{**base, "segment": "validation"}, {**base, "segment": "test"}])
+
+        summary = summarize_walk_forward(rows)
+
+        self.assertEqual(float(summary.iloc[0]["test_active_session_pct"]), 0.0)
+        self.assertEqual(summary.iloc[0]["phase5d_label"], "rejected")
 
 
 if __name__ == "__main__":
