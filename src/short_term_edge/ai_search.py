@@ -206,6 +206,25 @@ def _phase4_params(spec: StrategySpec) -> dict[str, Any]:
             "target": str(spec.exit.params["target"]),
             "min_range": float(spec.entry.params["min_range"]),
         }
+    if spec.family == "opening_drive_continuation":
+        return {
+            "drive_minutes": int(spec.entry.params["drive_minutes"]),
+            "minimum_drive_ticks": int(spec.entry.params["minimum_drive_ticks"]),
+            "breakout_offset_ticks": int(spec.entry.params.get("breakout_offset_ticks", 1)),
+            "stop_buffer_ticks": int(spec.exit.params.get("stop_buffer_ticks", 1)),
+            "target": str(spec.exit.params["target"]),
+            "tick_size": tick,
+        }
+    if spec.family == "vwap_pullback_continuation":
+        return {
+            "pullback_ref": str(spec.entry.params.get("pullback_ref", "vwap")),
+            "pullback_ticks": int(spec.entry.params["pullback_ticks"]),
+            "start_minute": int(spec.entry.params.get("start_minute", 0)),
+            "min_slope_ticks": int(spec.entry.params.get("min_slope_ticks", 0)),
+            "stop_ticks": int(spec.exit.params["stop_ticks"]),
+            "target_ticks": int(spec.exit.params["target_ticks"]),
+            "tick_size": tick,
+        }
     if spec.family == "vwap_reclaim_rejection":
         return {
             "mode": str(spec.entry.params["mode"]),

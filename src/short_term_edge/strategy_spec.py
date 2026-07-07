@@ -9,12 +9,16 @@ ALLOWED_INSTRUMENTS = {"MNQ", "MGC"}
 ALLOWED_FAMILIES = {
     "opening_range_failure",
     "opening_range_breakout",
+    "opening_drive_continuation",
+    "vwap_pullback_continuation",
     "vwap_reclaim_rejection",
     "prior_session_levels",
 }
 ALLOWED_ENTRY_RULES = {
     "close_back_inside",
     "close_outside_range",
+    "opening_drive_breakout",
+    "vwap_pullback",
     "vwap_cross",
     "prior_level_reaction",
 }

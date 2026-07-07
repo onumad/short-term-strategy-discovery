@@ -565,9 +565,11 @@ def generate_phase4a_signals(signal_bars: pd.DataFrame, full_df: pd.DataFrame, c
         return _signals_opening_range_failure(signal_bars, candidate)
     if family == "opening_range_breakout":
         return _signals_opening_range_breakout(signal_bars, candidate)
+    if family == "opening_drive_continuation":
+        return _signals_opening_drive_continuation(signal_bars, candidate)
     if family == "vwap_reclaim_rejection":
         return _signals_vwap_reclaim_rejection(signal_bars, candidate)
-    if family == "vwap_pullback_trend":
+    if family in {"vwap_pullback_trend", "vwap_pullback_continuation"}:
         return _signals_vwap_pullback(signal_bars, candidate)
     if family == "prior_session_levels":
         return _signals_prior_levels(signal_bars, candidate)
@@ -1072,8 +1074,46 @@ def _signals_vwap_reclaim_rejection(df: pd.DataFrame, candidate: Phase4ACandidat
     return signals
 
 
+def _signals_opening_drive_continuation(df: pd.DataFrame, candidate: Phase4ACandidate) -> list[dict[str, Any]]:
+    drive_minutes = int(candidate.params["drive_minutes"])
+    bars_needed = int(np.ceil(drive_minutes / candidate.signal_timeframe))
+    tick = float(candidate.params["tick_size"])
+    minimum_drive = float(candidate.params["minimum_drive_ticks"]) * tick
+    breakout_offset = float(candidate.params["breakout_offset_ticks"]) * tick
+    stop_buffer = float(candidate.params["stop_buffer_ticks"]) * tick
+    signals = []
+    for _, day in df.groupby("trading_session", sort=True):
+        day = day.reset_index(drop=True)
+        if len(day) <= bars_needed:
+            continue
+        drive = day.iloc[:bars_needed]
+        drive_move = float(drive.iloc[-1]["close"]) - float(drive.iloc[0]["open"])
+        if abs(drive_move) < minimum_drive:
+            continue
+        row = day.iloc[bars_needed]
+        if pd.Timestamp(row["bar_end"]).time() > time(11, 30):
+            continue
+        drive_high = float(drive["high"].max())
+        drive_low = float(drive["low"].min())
+        if drive_move > 0:
+            close = max(float(row["close"]), drive_high + breakout_offset)
+            stop = drive_low - stop_buffer
+            target = _target_from_r(close, stop, "long", drive_high - drive_low, candidate.params["target"])
+            signals.append(_signal(row, "long", stop, target, "opening_drive_long"))
+        elif drive_move < 0:
+            close = min(float(row["close"]), drive_low - breakout_offset)
+            stop = drive_high + stop_buffer
+            target = _target_from_r(close, stop, "short", drive_high - drive_low, candidate.params["target"])
+            signals.append(_signal(row, "short", stop, target, "opening_drive_short"))
+    return signals
+
+
 def _signals_vwap_pullback(df: pd.DataFrame, candidate: Phase4ACandidate) -> list[dict[str, Any]]:
     signals = []
+    tick = float(candidate.params["tick_size"])
+    pullback_ticks = float(candidate.params.get("pullback_ticks", 0.0))
+    start_minute = int(candidate.params.get("start_minute", 0))
+    min_slope = float(candidate.params.get("min_slope_ticks", 0.0)) * tick
     for _, day in df.groupby("trading_session", sort=True):
         day = day.reset_index(drop=True)
         emitted = 0
@@ -1083,18 +1123,30 @@ def _signals_vwap_pullback(df: pd.DataFrame, candidate: Phase4ACandidate) -> lis
                 break
             row = day.iloc[i]
             prev = day.iloc[i - 1]
+            first_start = pd.Timestamp(day.iloc[0]["bar_start"])
+            if (pd.Timestamp(row["bar_start"]) - first_start).total_seconds() / 60 < start_minute:
+                continue
             if pd.Timestamp(row["bar_end"]).time() > time(14, 30):
                 break
             ref = float(row["vwap"] if candidate.params["pullback_ref"] == "vwap" else row["ema20"])
-            uptrend = float(row["close"]) > float(row["vwap"]) and float(row["ema9"]) > float(row["ema20"])
-            downtrend = float(row["close"]) < float(row["vwap"]) and float(row["ema9"]) < float(row["ema20"])
-            if uptrend and float(row["low"]) <= ref <= float(row["high"]) and float(row["close"]) > float(prev["close"]):
-                stop = float(row["low"]) - candidate.params["tick_size"]
-                signals.append(_risk_signal(row, "long", stop, float(candidate.params["rr"]), "vwap_pullback_long"))
+            vwap_slope = float(row["vwap"]) - float(prev["vwap"])
+            uptrend = float(row["close"]) > float(row["vwap"]) and float(row["ema9"]) > float(row["ema20"]) and vwap_slope >= min_slope
+            downtrend = float(row["close"]) < float(row["vwap"]) and float(row["ema9"]) < float(row["ema20"]) and vwap_slope <= -min_slope
+            pullback_long = float(row["low"]) <= ref + pullback_ticks * tick and float(row["close"]) > ref
+            pullback_short = float(row["high"]) >= ref - pullback_ticks * tick and float(row["close"]) < ref
+            if uptrend and pullback_long and float(row["close"]) > float(prev["close"]):
+                if "target_ticks" in candidate.params:
+                    signals.append(_fixed_signal(row, "long", candidate, tick, "vwap_pullback_long"))
+                else:
+                    stop = float(row["low"]) - tick
+                    signals.append(_risk_signal(row, "long", stop, float(candidate.params["rr"]), "vwap_pullback_long"))
                 emitted += 1
-            elif downtrend and float(row["low"]) <= ref <= float(row["high"]) and float(row["close"]) < float(prev["close"]):
-                stop = float(row["high"]) + candidate.params["tick_size"]
-                signals.append(_risk_signal(row, "short", stop, float(candidate.params["rr"]), "vwap_pullback_short"))
+            elif downtrend and pullback_short and float(row["close"]) < float(prev["close"]):
+                if "target_ticks" in candidate.params:
+                    signals.append(_fixed_signal(row, "short", candidate, tick, "vwap_pullback_short"))
+                else:
+                    stop = float(row["high"]) + tick
+                    signals.append(_risk_signal(row, "short", stop, float(candidate.params["rr"]), "vwap_pullback_short"))
                 emitted += 1
     return signals
 
