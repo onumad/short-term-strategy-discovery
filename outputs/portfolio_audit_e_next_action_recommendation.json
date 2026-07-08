@@ -1,0 +1,7 @@
+{
+  "next_action": "playbook_scheduler_e_rare_module_priority_audit",
+  "official_gates_changed": false,
+  "paper_trading_approved": false,
+  "rare_module_track_enabled": true,
+  "rationale": "Rare modules improved activity as a group but increased overlap or drawdown diagnostics."
+}
