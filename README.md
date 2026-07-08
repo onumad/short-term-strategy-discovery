@@ -56,6 +56,12 @@ For data loading or audit-assumption changes, also run:
 - Official promotion gates remain unchanged.
 - No paper trading is approved.
 
+## Repo Hygiene And Label Safety
+
+- Generated/raw research artifacts under `data/raw/`, `outputs/`, `reports/`, `artifacts/`, `charts/`, and `trade_logs/` are ignored going forward; already tracked files are not deleted or untracked by `.gitignore` alone.
+- Legacy labels such as `paper_test_candidate`, `candidate_for_paper_review`, and watchlist-style labels are research/review language only and must not be interpreted as paper-trading approval.
+- Paper trading remains unapproved unless an explicit project policy changes; current project outputs must keep `paper_trading_approved=false` and official promotion gates unchanged.
+
 ## Research Platform Shape
 
 The project is being refactored toward a reusable research runner:

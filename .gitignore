@@ -1,8 +1,22 @@
-# Python
+# Python environments, bytecode, and caches
 .venv/
 __pycache__/
+*.pyc
 *.py[cod]
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Generated/local research artifacts
+# Note: ignored paths that are already tracked remain tracked until a future
+# explicit cleanup with git rm --cached. Do not delete research artifacts here.
+data/raw/
+outputs/
+reports/
+artifacts/
+charts/
+trade_logs/
 
 # OS/editor noise
 .DS_Store
