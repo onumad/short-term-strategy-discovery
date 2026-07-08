@@ -1,0 +1,88 @@
+{
+  "signal_evidence_status": [
+    "no_signal",
+    "weak_research_signal",
+    "positive_research_signal",
+    "real_but_nontradable_signal",
+    "priority_research_signal_for_more_data"
+  ],
+  "tradability_status": [
+    "not_tradable_negative",
+    "not_tradable_low_activity",
+    "not_tradable_concentrated",
+    "not_tradable_fold_unstable",
+    "watchlist_needs_more_history",
+    "review_packet_candidate"
+  ],
+  "research_track": [
+    "regular_practice_candidate",
+    "rare_setup_research_signal",
+    "parked_research_signal",
+    "priority_research_signal_for_more_data"
+  ],
+  "next_action_rules": [
+    {
+      "condition": "positive_but_rare",
+      "next_action": "add_to_module_registry",
+      "paper_trading_approved": false
+    },
+    {
+      "condition": "positive_and_uncorrelated",
+      "next_action": "run_portfolio_audit",
+      "paper_trading_approved": false
+    },
+    {
+      "condition": "positive_but_concentrated",
+      "next_action": "park_or_seek_diversifier",
+      "paper_trading_approved": false
+    },
+    {
+      "condition": "negative_or_no_signal",
+      "next_action": "reject",
+      "paper_trading_approved": false
+    },
+    {
+      "condition": "portfolio_improves_but_still_fails",
+      "next_action": "search_new_uncorrelated_family",
+      "paper_trading_approved": false
+    },
+    {
+      "condition": "official_gates_pass",
+      "next_action": "review_packet_only",
+      "paper_trading_approved": false
+    }
+  ],
+  "paper_trading_approved_default": false,
+  "low_activity_rule": {
+    "signal_evidence_status_forced_to_no_signal": false,
+    "tradability_status_when_low_activity": "not_tradable_low_activity"
+  },
+  "official_gates_changed": false,
+  "rare_module_validation_class": [
+    "rare_signal_insufficient_evidence",
+    "rare_positive_research_signal",
+    "rare_uncorrelated_diversifier_candidate",
+    "rare_priority_for_more_data",
+    "rare_rejected_negative_or_unstable"
+  ],
+  "rare_module_low_activity_rule": {
+    "fold_adequacy_status": "low_activity_not_fully_interpretable",
+    "signal_evidence_status": "positive_research_signal",
+    "signal_evidence_status_forced_to_no_signal": false,
+    "tradability_status": "not_tradable_low_activity",
+    "paper_trading_approved": false,
+    "official_gates_passed": false
+  },
+  "watchlist_hygiene_rule": {
+    "watchlist_needs_more_history_is_not_review_approval": true,
+    "required_before_any_review_language": {
+      "stress_pnl": "> 0",
+      "validation_pnl": "> 0",
+      "holdout_pnl": "> 0",
+      "walk_forward_stress_pnl": "> 0",
+      "fold_adequacy": "interpretable_or_explicitly_rare_track_compatible",
+      "paper_trading_approved": false
+    },
+    "invalid_watchlist_review_status": "blocked_from_review"
+  }
+}

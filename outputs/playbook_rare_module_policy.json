@@ -1,0 +1,130 @@
+{
+  "policy_name": "playbook_framework_e_rare_module_policy_integration",
+  "research_only_guardrail": "Research/simulation only. No live trading, broker adapters, order routing, webhooks, credential storage, automated execution, or LLM-driven trade decisions.",
+  "rare_module_definition": {
+    "specialized_module": true,
+    "has_positive_research_evidence": true,
+    "may_be_low_activity": true,
+    "may_have_low_activity_not_fully_interpretable_fold_adequacy": true,
+    "not_tradable_by_itself": true,
+    "may_contribute_as_playbook_diversifier": true
+  },
+  "official_gates_changed": false,
+  "paper_trading_approved": false,
+  "live_trading_approved": false,
+  "no_official_paper_review_threshold_is_loosened": true,
+  "rare_module_track_enabled": true,
+  "rare_module_track_scope": "research-only",
+  "new_strategy_signals_generated": false,
+  "strategy_searches_run": false,
+  "candidate_results_changed": false,
+  "candidates_promoted": false,
+  "required_rare_module_fields": [
+    "rare_module_track_enabled",
+    "rare_module_validation_class",
+    "fold_adequacy_status",
+    "fold_interpretability",
+    "rare_module_registration_decision",
+    "rare_module_revisit_condition",
+    "rare_module_portfolio_role",
+    "module_level_fold_warning",
+    "playbook_level_contribution_status"
+  ],
+  "rare_module_validation_classes": {
+    "rare_signal_insufficient_evidence": "Rare/sparse module without enough positive stress, validation, holdout, and walk-forward stress evidence.",
+    "rare_positive_research_signal": "Rare positive research signal with positive research evidence but not enough module-level activity for tradability.",
+    "rare_uncorrelated_diversifier_candidate": "Rare positive research signal with low average correlation and possible playbook diversification value.",
+    "rare_priority_for_more_data": "Rare setup that should be revisited after materially more history before tradability/review consideration.",
+    "rare_rejected_negative_or_unstable": "Rare/watchlist-labeled row blocked by negative, unstable, high-correlation, or misleading evidence."
+  },
+  "registry_behavior": {
+    "minimum_research_evidence_rules": {
+      "stress_pnl": "> 0",
+      "validation_pnl": "> 0",
+      "holdout_pnl": "> 0",
+      "walk_forward_stress_pnl": "> 0",
+      "average_correlation_to_registry": "<= 0.35",
+      "paper_trading_approved": false
+    },
+    "required_registry_values_when_added": {
+      "research_track": "rare_setup_research_signal",
+      "tradability_status": "not_tradable_low_activity",
+      "paper_trading_approved": false,
+      "official_gates_passed": false
+    }
+  },
+  "portfolio_audit_behavior": {
+    "include_rare_modules_as_diversifier_candidates": true,
+    "report_rare_module_contribution_separately": true,
+    "avoid_treating_low_activity_as_no_signal": true,
+    "block_paper_review_unless_official_gates_pass_at_playbook_or_review_level": true,
+    "required_rare_module_contribution_fields": [
+      "rare_module_id",
+      "rare_module_validation_class",
+      "rare_module_active_days_added",
+      "rare_module_incremental_trades",
+      "rare_module_incremental_pnl",
+      "rare_module_weak_fold_improvement_status",
+      "rare_module_average_correlation_delta",
+      "rare_module_overlap_delta",
+      "rare_module_drawdown_delta",
+      "playbook_level_contribution_status"
+    ],
+    "required_questions": [
+      "whether rare modules add active days",
+      "whether rare modules improve weak folds",
+      "whether rare modules reduce correlation",
+      "whether rare modules increase overlap or drawdown"
+    ]
+  },
+  "fold_adequacy_behavior": {
+    "module_level_sparse_folds_status": "low_activity_not_fully_interpretable",
+    "low_fold_adequacy_erases_positive_signal_evidence": false,
+    "low_fold_adequacy_blocks_tradability_or_review_unless_playbook_level_evidence_later_supports_it": true,
+    "portfolio_level_fold_stability_required_for_playbook_review": true
+  },
+  "watchlist_hygiene": {
+    "watchlist_needs_more_history_is_not_review_approval": true,
+    "required_before_any_review_language": {
+      "stress_pnl": "> 0",
+      "validation_pnl": "> 0",
+      "holdout_pnl": "> 0",
+      "walk_forward_stress_pnl": "> 0",
+      "fold_adequacy": "interpretable_or_explicitly_rare_track_compatible",
+      "paper_trading_approved": false
+    },
+    "invalid_watchlist_review_status": "blocked_from_review"
+  },
+  "future_reporting_language": {
+    "preferred": [
+      "rare positive research signal",
+      "rare setup diversifier",
+      "low activity / fold result not fully interpretable",
+      "not tradable by itself",
+      "portfolio contribution required before further review",
+      "paper trading not approved"
+    ],
+    "avoid_without_qualification": [
+      "watchlist",
+      "approved",
+      "tradable",
+      "passed unless official gates passed"
+    ]
+  },
+  "phase16a_registry_evidence_summary": {
+    "phase16a_rare_modules_present_in_registry": 3,
+    "module_ids": [
+      "MNQ_16a_high_vol_mixed_late_resolution_breakout_long_broad_high_vol_mixed_close_confirm_fill_next_open_hard_stop_time_exit",
+      "MNQ_16a_high_vol_mixed_late_resolution_breakout_long_broad_high_vol_mixed_close_confirm_fill_next_open_structure_target_time_exit",
+      "MNQ_16a_high_vol_mixed_late_resolution_breakout_long_broad_high_vol_mixed_two_bar_confirm_fill_next_open_hard_stop_time_exit"
+    ],
+    "all_paper_trading_approved_false": true,
+    "all_official_gates_passed_false": true
+  },
+  "source_policy": {
+    "policy_name": "rare_module_validation_track_phase16a_case_study",
+    "rare_module_track_enabled": true,
+    "official_gates_changed": false,
+    "paper_trading_approved": false
+  }
+}

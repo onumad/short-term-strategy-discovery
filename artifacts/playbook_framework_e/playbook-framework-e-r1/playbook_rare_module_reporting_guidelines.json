@@ -1,0 +1,26 @@
+{
+  "guideline_name": "playbook_rare_module_reporting_guidelines",
+  "official_gates_changed": false,
+  "paper_trading_approved": false,
+  "required_phrases": [
+    "rare positive research signal",
+    "rare setup diversifier",
+    "low activity / fold result not fully interpretable",
+    "not tradable by itself",
+    "portfolio contribution required before further review",
+    "paper trading not approved"
+  ],
+  "avoid_phrases_without_qualification": [
+    "watchlist",
+    "approved",
+    "tradable",
+    "passed unless official gates passed"
+  ],
+  "required_sections": [
+    "rare-module contribution",
+    "module-level fold warning",
+    "playbook-level contribution status",
+    "watchlist hygiene",
+    "research-only guardrail"
+  ]
+}

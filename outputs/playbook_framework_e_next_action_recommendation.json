@@ -1,0 +1,7 @@
+{
+  "next_action": "portfolio_audit_e_with_phase16a_rare_modules",
+  "rationale": "Rare-module policy is integrated; next audit should test whether Phase 16A rare high-vol mixed modules improve playbook-level activity, folds, concentration, and weak-regime coverage.",
+  "official_gates_changed": false,
+  "paper_trading_approved": false,
+  "rare_module_track_enabled": true
+}

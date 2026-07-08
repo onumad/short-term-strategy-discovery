@@ -1,0 +1,102 @@
+{
+  "market_condition": [
+    "trend_day",
+    "range_day",
+    "reversal_day",
+    "breakout_day",
+    "failed_breakout_day",
+    "low_volatility_day",
+    "high_volatility_day",
+    "midday_range",
+    "power_hour_expansion",
+    "prior_level_interaction"
+  ],
+  "module_family": [
+    "breakout",
+    "fade",
+    "pullback_continuation",
+    "sweep_reversal",
+    "range_expansion",
+    "range_reversion",
+    "trend_continuation",
+    "volatility_expansion",
+    "prior_level_reaction"
+  ],
+  "portfolio_role": [
+    "core_module",
+    "rare_setup_module",
+    "diversifier_module",
+    "parked_module",
+    "candidate_for_more_data",
+    "rare_setup_diversifier"
+  ],
+  "signal_evidence_status": [
+    "no_signal",
+    "weak_research_signal",
+    "positive_research_signal",
+    "real_but_nontradable_signal",
+    "priority_research_signal_for_more_data"
+  ],
+  "tradability_status": [
+    "not_tradable_negative",
+    "not_tradable_low_activity",
+    "not_tradable_concentrated",
+    "not_tradable_fold_unstable",
+    "watchlist_needs_more_history",
+    "review_packet_candidate"
+  ],
+  "research_track": [
+    "regular_practice_candidate",
+    "rare_setup_research_signal",
+    "parked_research_signal",
+    "priority_research_signal_for_more_data"
+  ],
+  "module_success_criteria": [
+    "plain-English deterministic market logic",
+    "positive signal evidence after costs/stress where available",
+    "positive validation and holdout evidence where available",
+    "acceptable MFE/MAE behavior for the module type",
+    "measured concentration and fold stability",
+    "low or useful correlation to existing modules",
+    "explicit rare setup or regular-practice track assignment",
+    "no paper-review readiness unless official gates pass"
+  ],
+  "playbook_success_criteria": [
+    "regular combined active days and opportunity count",
+    "improved fold stability versus individual modules",
+    "reduced day and trade concentration versus individual modules",
+    "controlled drawdown",
+    "low or complementary module correlations",
+    "measured trade overlap",
+    "balanced contribution by module/family",
+    "clear improvement over individual modules without changing promotion gates"
+  ],
+  "hard_guardrails": [
+    "research/simulation only",
+    "no broker/live functionality",
+    "no LLM-driven trade decisions",
+    "no paper-trading approval unless official gates pass",
+    "no loosening official gates",
+    "no post-hoc date/session exclusions",
+    "no weekday rescue filters unless structurally justified",
+    "deterministic serializable rules only"
+  ],
+  "rare_module_validation_class": [
+    "rare_signal_insufficient_evidence",
+    "rare_positive_research_signal",
+    "rare_uncorrelated_diversifier_candidate",
+    "rare_priority_for_more_data",
+    "rare_rejected_negative_or_unstable"
+  ],
+  "rare_module_required_fields": [
+    "rare_module_track_enabled",
+    "rare_module_validation_class",
+    "fold_adequacy_status",
+    "fold_interpretability",
+    "rare_module_registration_decision",
+    "rare_module_revisit_condition",
+    "rare_module_portfolio_role",
+    "module_level_fold_warning",
+    "playbook_level_contribution_status"
+  ]
+}
