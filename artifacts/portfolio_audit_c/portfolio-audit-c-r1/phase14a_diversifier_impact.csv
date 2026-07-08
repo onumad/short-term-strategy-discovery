@@ -1,0 +1,4 @@
+portfolio_mode,active_days_delta,fold_delta,best_day_concentration_delta,best_trade_concentration_delta,drawdown_delta,correlation_delta,gap_coverage_incremental_days,phase14a_net_contribution,phase14a_trade_count,phase14a_active_days,phase14a_overlap_skipped,phase14a_session_skipped,phase14a_days_existing_no_trade,phase14a_days_existing_negative_pnl,keep_role_assessment
+raw_sum_diagnostic,21,0.0,0.00997,-0.0087,-379.42,-0.012485,1,797.97,141,108,0,0,21,43,diversifier_module
+one_trade_at_a_time_chronological,21,0.0,-0.010286,-0.010286,-362.68,-0.012485,1,581.99,115,94,69,0,21,38,diversifier_module
+max_one_trade_per_session,21,0.0,0.038381,0.038381,-4.74,-0.012485,1,-753.41,49,49,0,313,21,15,diversifier_module

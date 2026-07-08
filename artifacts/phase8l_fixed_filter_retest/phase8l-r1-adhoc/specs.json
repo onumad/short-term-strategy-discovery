@@ -1,0 +1,101 @@
+[
+  {
+    "action_rule": "keep all Phase 8J filtered trades",
+    "axis": "all",
+    "bucket": "all",
+    "evidence": "Phase 8J pre-14 baseline for Phase 8L comparison",
+    "filter_family": "baseline",
+    "filter_id": "baseline_phase8j",
+    "promotion_allowed": false,
+    "source_action_id": "baseline_phase8j",
+    "source_action_rank": 0
+  },
+  {
+    "action_rule": "exclude weekday=Wednesday",
+    "axis": "weekday",
+    "bucket": "Wednesday",
+    "evidence": "test_pnl=-3559.24; validation_pnl=-1977.84; test_trades=201",
+    "filter_family": "exclude_bucket",
+    "filter_id": "exclude:weekday:Wednesday",
+    "promotion_allowed": false,
+    "source_action_id": "phase8k_retest_exclude_weekday_wednesday",
+    "source_action_rank": 1
+  },
+  {
+    "action_rule": "exclude minute_bucket=10:00-10:30",
+    "axis": "minute_bucket",
+    "bucket": "10:00-10:30",
+    "evidence": "test_pnl=-2626.08; validation_pnl=-597.74; test_trades=167",
+    "filter_family": "exclude_bucket",
+    "filter_id": "exclude:minute_bucket:10:00-10:30",
+    "promotion_allowed": false,
+    "source_action_id": "phase8k_retest_exclude_minute_bucket_10_00_10_30",
+    "source_action_rank": 2
+  },
+  {
+    "action_rule": "exclude weekday=Tuesday",
+    "axis": "weekday",
+    "bucket": "Tuesday",
+    "evidence": "test_pnl=-2204.12; validation_pnl=-60.98; test_trades=188",
+    "filter_family": "exclude_bucket",
+    "filter_id": "exclude:weekday:Tuesday",
+    "promotion_allowed": false,
+    "source_action_id": "phase8k_retest_exclude_weekday_tuesday",
+    "source_action_rank": 3
+  },
+  {
+    "action_rule": "exclude minute_bucket=12:30-13:00",
+    "axis": "minute_bucket",
+    "bucket": "12:30-13:00",
+    "evidence": "test_pnl=-1183.66; validation_pnl=-162.38; test_trades=59",
+    "filter_family": "exclude_bucket",
+    "filter_id": "exclude:minute_bucket:12:30-13:00",
+    "promotion_allowed": false,
+    "source_action_id": "phase8k_retest_exclude_minute_bucket_12_30_13_00",
+    "source_action_rank": 4
+  },
+  {
+    "action_rule": "exclude rth_bucket=10:00-11:00",
+    "axis": "rth_bucket",
+    "bucket": "10:00-11:00",
+    "evidence": "test_pnl=-832.22; validation_pnl=947.24; test_trades=303",
+    "filter_family": "exclude_bucket",
+    "filter_id": "exclude:rth_bucket:10:00-11:00",
+    "promotion_allowed": false,
+    "source_action_id": "phase8k_retest_exclude_rth_bucket_10_00_11_00",
+    "source_action_rank": 5
+  },
+  {
+    "action_rule": "exclude minute_bucket=13:30-14:00",
+    "axis": "minute_bucket",
+    "bucket": "13:30-14:00",
+    "evidence": "test_pnl=-33.56; validation_pnl=923.14; test_trades=44",
+    "filter_family": "exclude_bucket",
+    "filter_id": "exclude:minute_bucket:13:30-14:00",
+    "promotion_allowed": false,
+    "source_action_id": "phase8k_retest_exclude_minute_bucket_13_30_14_00",
+    "source_action_rank": 6
+  },
+  {
+    "action_rule": "exclude minute_bucket=11:00-11:30",
+    "axis": "minute_bucket",
+    "bucket": "11:00-11:30",
+    "evidence": "test_pnl=186.86; validation_pnl=-506.12; test_trades=61",
+    "filter_family": "exclude_bucket",
+    "filter_id": "exclude:minute_bucket:11:00-11:30",
+    "promotion_allowed": false,
+    "source_action_id": "phase8k_retest_exclude_minute_bucket_11_00_11_30",
+    "source_action_rank": 7
+  },
+  {
+    "action_rule": "exclude minute_bucket=11:30-12:00",
+    "axis": "minute_bucket",
+    "bucket": "11:30-12:00",
+    "evidence": "test_pnl=378.10; validation_pnl=-420.64; test_trades=85",
+    "filter_family": "exclude_bucket",
+    "filter_id": "exclude:minute_bucket:11:30-12:00",
+    "promotion_allowed": false,
+    "source_action_id": "phase8k_retest_exclude_minute_bucket_11_30_12_00",
+    "source_action_rank": 8
+  }
+]

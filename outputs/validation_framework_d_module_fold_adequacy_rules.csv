@@ -1,0 +1,4 @@
+validation_level,rule,configurable_default,diagnostic_only,effect,converts_to_no_signal,can_block_tradability
+module_level_validation,minimum_active_days_per_fold,10,True,fold result is low-activity / not fully interpretable below this value,False,True
+module_level_validation,minimum_trades_per_fold,10,True,fold result is low-activity / not fully interpretable below this value,False,True
+module_level_validation,report_folds_below_min_activity,True,True,"report active days, trades, adequacy status, and count of sparse folds before interpreting pass/fail",False,True

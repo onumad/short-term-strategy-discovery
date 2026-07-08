@@ -1,0 +1,16 @@
+{
+  "next_action": "playbook_framework_e_rare_module_policy_integration",
+  "rationale": "Phase 16A rare high-vol mixed modules were added as rare setup diversifiers; integrate rare-module policy into future playbook evaluation before Portfolio Audit E.",
+  "official_gates_changed": false,
+  "paper_trading_approved": false,
+  "rare_module_track_enabled": true,
+  "registry_counts": {
+    "parked_research_signal": 22,
+    "rare_setup_research_signal": 25
+  },
+  "phase16a_rows_added": 3,
+  "phase16a_watchlist_rows_excluded": 5,
+  "rare_module_caveat": "Phase 16A rare modules are low-activity and fold adequacy is not fully interpretable. They are accepted only as rare setup diversifier research modules, not as watchlist, paper-review, or paper-trading candidates.",
+  "watchlist_hygiene_note": "Phase 16A watchlist labels are not registry watchlist/review approval; all five watchlist-labeled rows from the Rare Module Validation Track remain excluded, are not review_packet_candidate, and are not paper-approved.",
+  "research_signal_registry_e_recommendation": "outputs/research_signal_registry_e_next_action_recommendation.json"
+}

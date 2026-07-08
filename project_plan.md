@@ -2,9 +2,9 @@
 
 ## Objective
 
-Find a practical short-term intraday futures edge in the recent local MNQ and MGC Databento data. The target is a strategy family that is active enough for daily practice and paper trading, preferably 1-3 qualified opportunities per day and activity on at least 70% of recent trading days.
+Build a diversified playbook of specialized deterministic MNQ intraday setups. No individual setup must trade daily; the combined playbook must provide enough regular opportunities while preserving strict research-only validation.
 
-This project is exploratory. It does not attempt to prove a permanent multi-year edge, and it does not approve live trading.
+This project is exploratory. It does not attempt to prove a permanent multi-year edge, does not change official promotion gates, and does not approve live or paper trading unless unchanged gates pass.
 
 ## Data Loading And Normalization
 

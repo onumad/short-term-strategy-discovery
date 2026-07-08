@@ -1,0 +1,5 @@
+{
+  "next_action": "keep_registry_and_search_new_uncorrelated_families",
+  "paper_trading_approved": false,
+  "rationale": "Some combinations improve activity, but concentration/fold gates remain weak."
+}

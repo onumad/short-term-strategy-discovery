@@ -1,0 +1,4 @@
+{
+  "next_action": "create_two_tier_research_signal_labeling",
+  "rationale": "Several signals remain positive under bootstrap/outlier diagnostics but fail concentration, activity, or fold gates."
+}

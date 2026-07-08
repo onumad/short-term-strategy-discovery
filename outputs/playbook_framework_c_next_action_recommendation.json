@@ -1,0 +1,6 @@
+{
+  "next_action": "phase13a_final_acceptance_then_module_registry_update",
+  "rationale": "Playbook evaluation config now separates module signal evidence, tradability, and portfolio contribution while preserving official gates.",
+  "official_gates_changed": false,
+  "paper_trading_approved": false
+}

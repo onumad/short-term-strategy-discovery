@@ -1,0 +1,5 @@
+group,trades,net_pnl,stress_pnl,avg_pnl,median_pnl,win_rate,profit_factor,avg_win,avg_loss,max_drawdown,validation_pnl,holdout_pnl,best_day_concentration,best_trade_concentration,avg_mfe,avg_mae,mfe_to_mae_ratio,target_hit_rate,stop_hit_rate,time_stop_rate,same_bar_ambiguity_rate,walk_forward_stress_pnl,positive_wf_folds_pct
+time_or_flatten,7613,100379.88,92766.88,13.19,8.26,0.54118,1.359391,92.16,-79.96,-3992.18,10464.24,35169.26,0.151352,0.008889,106.58,91.03,1.170816,0.0,0.0,1.0,0.0,92766.88,0.0
+target_hit,137,30163.87,30026.87,220.17,160.01,1.0,999.0,220.17,0.0,0.0,9443.64,2170.13,0.122234,0.024152,274.12,25.8,10.625124,1.0,0.0,0.0,0.0,30026.87,0.0
+stopped_after_favorable_move,14,-1120.86,-1134.86,-80.06,-84.99,0.142857,0.05761,34.26,-99.12,-1155.12,-204.48,-62.48,1.0,1.0,174.11,92.14,1.889535,0.0,1.0,0.0,0.285714,-1134.86,0.0
+quick_or_adverse_stop,394,-79911.06,-80305.06,-202.82,-171.74,0.0,0.0,0.0,-202.82,-79745.32,-19664.72,-28828.54,1.0,1.0,50.16,239.21,0.209671,0.0,1.0,0.0,0.0,-80305.06,0.0

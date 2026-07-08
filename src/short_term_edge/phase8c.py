@@ -1,0 +1,289 @@
+from __future__ import annotations
+
+import json
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+
+import pandas as pd
+
+
+@dataclass(frozen=True)
+class Phase8CConfig:
+    symbol: str = "MGC"
+    min_trades: int = 30
+    max_active_session_pct: float = 0.70
+    concentration_limit: float = 0.50
+    drawdown_limit: float = -1_500.0
+    max_ambiguity_count: int = 0
+
+
+@dataclass(frozen=True)
+class Phase8CFilterSpec:
+    filter_id: str
+    filter_family: str
+    params: dict[str, Any]
+    description: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "filter_id": self.filter_id,
+            "filter_family": self.filter_family,
+            "params": dict(self.params),
+            "description": self.description,
+        }
+
+
+def build_phase8c_filter_specs() -> list[Phase8CFilterSpec]:
+    """Return deterministic pre-entry no-trade filters for Phase 8C diagnostics."""
+    return [
+        Phase8CFilterSpec("time_window:first_30", "time_window", {"start": "09:30", "end": "10:00"}, "Only trades entered in the first 30 RTH minutes."),
+        Phase8CFilterSpec("time_window:first_60", "time_window", {"start": "09:30", "end": "10:30"}, "Only trades entered in the first 60 RTH minutes."),
+        Phase8CFilterSpec("time_window:morning_only", "time_window", {"start": "09:30", "end": "11:30"}, "Only morning RTH entries."),
+        Phase8CFilterSpec("time_window:exclude_lunch", "time_window", {"exclude_start": "11:30", "exclude_end": "13:30"}, "Exclude midday/lunch entries."),
+        Phase8CFilterSpec("time_window:last_90", "time_window", {"start": "14:30", "end": "16:00"}, "Only late-session entries."),
+        Phase8CFilterSpec("side:long_only", "side", {"side": "long"}, "Keep long entries only."),
+        Phase8CFilterSpec("side:short_only", "side", {"side": "short"}, "Keep short entries only."),
+        Phase8CFilterSpec("day_of_week:mon_wed_fri", "day_of_week", {"days": [0, 2, 4]}, "Keep Monday/Wednesday/Friday sessions only."),
+        Phase8CFilterSpec("day_of_week:tue_thu", "day_of_week", {"days": [1, 3]}, "Keep Tuesday/Thursday sessions only."),
+    ]
+
+
+def apply_phase8c_filter(trades: pd.DataFrame, spec: Phase8CFilterSpec) -> pd.DataFrame:
+    """Apply a pre-entry filter to an existing trade log without mutating it."""
+    if trades.empty:
+        return trades.copy()
+    out = trades.copy()
+    out["entry_time"] = pd.to_datetime(out["entry_time"])
+    if spec.filter_family == "time_window":
+        minutes = out["entry_time"].dt.hour * 60 + out["entry_time"].dt.minute
+        if "start" in spec.params and "end" in spec.params:
+            start = _hhmm_to_minutes(str(spec.params["start"]))
+            end = _hhmm_to_minutes(str(spec.params["end"]))
+            out = out[(minutes >= start) & (minutes < end)]
+        elif "exclude_start" in spec.params and "exclude_end" in spec.params:
+            start = _hhmm_to_minutes(str(spec.params["exclude_start"]))
+            end = _hhmm_to_minutes(str(spec.params["exclude_end"]))
+            out = out[(minutes < start) | (minutes >= end)]
+        else:
+            raise ValueError(f"Unsupported time_window params: {spec.params}")
+    elif spec.filter_family == "side":
+        out = out[out["side"].astype(str).eq(str(spec.params["side"]))]
+    elif spec.filter_family == "day_of_week":
+        days = {int(day) for day in spec.params["days"]}
+        out = out[out["entry_time"].dt.dayofweek.isin(days)]
+    else:
+        raise ValueError(f"Unsupported Phase 8C filter family: {spec.filter_family}")
+    return out.reset_index(drop=True)
+
+
+def evaluate_phase8c_filters(
+    trades: pd.DataFrame,
+    filter_specs: list[Phase8CFilterSpec],
+    *,
+    complete_sessions: list[Any],
+    config: Phase8CConfig = Phase8CConfig(),
+) -> pd.DataFrame:
+    rows = []
+    source_candidate_count = int(trades["source_candidate_id"].nunique()) if not trades.empty and "source_candidate_id" in trades.columns else 0
+    for filter_spec in filter_specs:
+        kept = apply_phase8c_filter(trades, filter_spec)
+        row = _summarize_filtered_trades(filter_spec, kept, complete_sessions, source_candidate_count, config)
+        rows.append(row)
+    ranked = pd.DataFrame(rows)
+    if ranked.empty:
+        return ranked
+    ranked = ranked.sort_values(["phase8c_score", "slippage_4_ticks_net_pnl", "net_pnl"], ascending=[False, False, False]).reset_index(drop=True)
+    ranked.insert(0, "phase8c_rank", range(1, len(ranked) + 1))
+    return ranked
+
+
+def render_phase8c_report(
+    results: pd.DataFrame,
+    config: Phase8CConfig,
+    *,
+    source_trade_count: int,
+    source_candidate_count: int,
+    results_path: Path,
+    report_path: Path,
+    run_artifact_dir: Path | None = None,
+) -> str:
+    label_counts = results["phase8c_label"].value_counts().to_dict() if not results.empty and "phase8c_label" in results.columns else {}
+    lines = [
+        "# Phase 8C No-Trade / Session-Selection Diagnostic",
+        "",
+        "Generated by: `./.venv/Scripts/python.exe scripts/run_phase8c_no_trade_filter_diagnostic.py`",
+        "",
+        "## Scope And Guardrails",
+        "",
+        "- Research/simulation only. No live trading, broker adapters, order routing, API-key storage, webhooks, or automated execution were added.",
+        "- Phase 8C applies pre-entry filters to existing candidate trade logs; it does not change entry logic, exits, sizing, or promotion gates.",
+        "- Labels are diagnostic only and require later walk-forward validation before any paper-test consideration.",
+        "",
+        "## Inputs",
+        "",
+        f"- Source candidate count: `{source_candidate_count}`",
+        f"- Source trade count: `{source_trade_count}`",
+        f"- Minimum kept trades: `{config.min_trades}`",
+        "",
+        "## Label Counts",
+        "",
+        f"- `{label_counts}`",
+        "",
+        "## Ranked Filters",
+        "",
+        "| Rank | Filter | Label | Score | Trades | Active % | Net PnL | 4-Tick Stress | Max DD | Day Conc. | Trade Conc. | Ambiguity | Notes |",
+        "| ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
+    ]
+    for _, row in results.head(12).iterrows():
+        lines.append(
+            f"| {int(row['phase8c_rank'])} | `{row['filter_id']}` | {row['phase8c_label']} | {row['phase8c_score']:.2f} | "
+            f"{int(row['kept_trade_count'])} | {row['active_session_pct'] * 100:.1f}% | ${row['net_pnl']:.2f} | ${row['slippage_4_ticks_net_pnl']:.2f} | "
+            f"${row['max_drawdown']:.2f} | {row['best_day_concentration'] * 100:.1f}% | {row['best_trade_concentration'] * 100:.1f}% | "
+            f"{int(row['same_bar_stop_target_ambiguity_count'])} | {row['phase8c_notes']} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Decision Rule",
+            "",
+            "- `phase8c_no_trade_filter_candidate` means a filter improved trade selectivity enough to justify deeper testing, not promotion.",
+            "- `insufficient_activity` means the filter mostly improved metrics by deleting too many trades.",
+            "- `rejected` means the filtered path still fails key structural gates.",
+            "",
+            "## Outputs",
+            "",
+            f"- Results CSV: `{results_path.as_posix()}`",
+            f"- Report: `{report_path.as_posix()}`",
+        ]
+    )
+    if run_artifact_dir is not None:
+        lines.append(f"- Run-scoped artifacts: `{run_artifact_dir.as_posix()}`")
+    lines.extend(["", "## Repro Command", "", "```bash", "./.venv/Scripts/python.exe scripts/run_phase8c_no_trade_filter_diagnostic.py", "```", ""])
+    return "\n".join(lines)
+
+
+def _summarize_filtered_trades(
+    filter_spec: Phase8CFilterSpec,
+    trades: pd.DataFrame,
+    complete_sessions: list[Any],
+    source_candidate_count: int,
+    config: Phase8CConfig,
+) -> dict[str, Any]:
+    base = {
+        "filter_id": filter_spec.filter_id,
+        "filter_family": filter_spec.filter_family,
+        "filter_params_json": json.dumps(filter_spec.params, sort_keys=True),
+        "source_candidate_count": source_candidate_count,
+    }
+    if trades.empty:
+        return {
+            **base,
+            "kept_trade_count": 0,
+            "kept_active_sessions": 0,
+            "active_session_pct": 0.0,
+            "net_pnl": 0.0,
+            "validation_pnl": 0.0,
+            "holdout_pnl": 0.0,
+            "slippage_4_ticks_net_pnl": 0.0,
+            "max_drawdown": 0.0,
+            "best_day_concentration": 0.0,
+            "best_trade_concentration": 0.0,
+            "same_bar_stop_target_ambiguity_count": 0,
+            "phase8c_score": -999.0,
+            "phase8c_label": "insufficient_activity",
+            "phase8c_notes": "filter kept no trades",
+        }
+    ordered = trades.sort_values(["entry_time", "exit_time"]).copy()
+    net = float(ordered["net_pnl"].sum())
+    stress_col = "stress_net_pnl" if "stress_net_pnl" in ordered.columns else "net_pnl"
+    stress = float(ordered[stress_col].sum())
+    validation = float(ordered.loc[ordered.get("split", pd.Series(index=ordered.index, dtype=object)).eq("validation"), "net_pnl"].sum())
+    holdout = float(ordered.loc[ordered.get("split", pd.Series(index=ordered.index, dtype=object)).eq("holdout"), "net_pnl"].sum())
+    equity = ordered["net_pnl"].cumsum()
+    drawdown = equity - equity.cummax()
+    day_pnl = ordered.groupby("trading_session")["net_pnl"].sum()
+    active_sessions = int(ordered["trading_session"].nunique())
+    active_pct = active_sessions / len(complete_sessions) if complete_sessions else 0.0
+    best_day_conc = _concentration(float(day_pnl.max()) if len(day_pnl) else 0.0, net)
+    best_trade_conc = _concentration(float(ordered["net_pnl"].max()), net)
+    ambiguity = int(ordered.get("same_bar_stop_target_ambiguity", pd.Series(dtype=int)).fillna(0).sum())
+    score = _phase8c_score(net, stress, active_pct, len(ordered), float(drawdown.min()), best_day_conc, best_trade_conc, ambiguity)
+    label = _phase8c_label(net, stress, active_pct, len(ordered), float(drawdown.min()), best_day_conc, best_trade_conc, ambiguity, config)
+    notes = _phase8c_notes(net, stress, active_pct, len(ordered), float(drawdown.min()), best_day_conc, best_trade_conc, ambiguity, config)
+    return {
+        **base,
+        "kept_trade_count": int(len(ordered)),
+        "kept_active_sessions": active_sessions,
+        "active_session_pct": float(active_pct),
+        "net_pnl": round(net, 2),
+        "validation_pnl": round(validation, 2),
+        "holdout_pnl": round(holdout, 2),
+        "slippage_4_ticks_net_pnl": round(stress, 2),
+        "max_drawdown": round(float(drawdown.min()), 2),
+        "best_day_concentration": round(best_day_conc, 6),
+        "best_trade_concentration": round(best_trade_conc, 6),
+        "same_bar_stop_target_ambiguity_count": ambiguity,
+        "phase8c_score": round(score, 4),
+        "phase8c_label": label,
+        "phase8c_notes": "; ".join(notes) if notes else "phase8c_no_trade_filter_candidate: filter merits deeper walk-forward-aware testing",
+    }
+
+
+def _phase8c_score(net: float, stress: float, active_pct: float, trades: int, drawdown: float, day_conc: float, trade_conc: float, ambiguity: int) -> float:
+    score = 0.0
+    score += max(min(net / 1_500.0, 2.0), -2.0) * 14.0
+    score += max(min(stress / 1_500.0, 2.0), -2.0) * 24.0
+    score += min(active_pct, 0.50) * 12.0
+    score += min(trades / 80.0, 1.0) * 8.0
+    score -= min(abs(drawdown) / 1_500.0, 2.0) * 14.0
+    score -= max(day_conc - 0.30, 0.0) * 160.0
+    score -= max(trade_conc - 0.20, 0.0) * 160.0
+    score -= min(ambiguity, 10) * 6.0
+    return float(score)
+
+
+def _phase8c_label(net: float, stress: float, active_pct: float, trades: int, drawdown: float, day_conc: float, trade_conc: float, ambiguity: int, config: Phase8CConfig) -> str:
+    if trades < config.min_trades:
+        return "insufficient_activity"
+    if net <= 0 or stress <= 0:
+        return "rejected"
+    if active_pct > config.max_active_session_pct:
+        return "rejected"
+    if drawdown < config.drawdown_limit:
+        return "rejected"
+    if day_conc > config.concentration_limit or trade_conc > config.concentration_limit:
+        return "rejected"
+    if ambiguity > config.max_ambiguity_count:
+        return "rejected"
+    return "phase8c_no_trade_filter_candidate"
+
+
+def _phase8c_notes(net: float, stress: float, active_pct: float, trades: int, drawdown: float, day_conc: float, trade_conc: float, ambiguity: int, config: Phase8CConfig) -> list[str]:
+    notes: list[str] = []
+    if trades < config.min_trades:
+        notes.append("insufficient_activity")
+    if net <= 0:
+        notes.append("negative filtered net PnL")
+    if stress <= 0:
+        notes.append("fails filtered 4-tick stress")
+    if active_pct > config.max_active_session_pct:
+        notes.append("still trades too many sessions")
+    if drawdown < config.drawdown_limit:
+        notes.append("filtered drawdown remains too large")
+    if day_conc > config.concentration_limit:
+        notes.append("filtered one-day concentration risk")
+    if trade_conc > config.concentration_limit:
+        notes.append("filtered one-trade concentration risk")
+    if ambiguity > config.max_ambiguity_count:
+        notes.append("same-bar ambiguity remains")
+    return notes
+
+
+def _hhmm_to_minutes(value: str) -> int:
+    hour, minute = value.split(":", 1)
+    return int(hour) * 60 + int(minute)
+
+
+def _concentration(value: float, net_pnl: float) -> float:
+    return float(value / net_pnl) if net_pnl > 0 else 1.0

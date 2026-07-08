@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Playbook validation fold policy schema",
+  "type": "object",
+  "required": [
+    "policy_name",
+    "official_gates_changed",
+    "paper_trading_approved",
+    "live_trading_approved",
+    "validation_levels",
+    "standard_fold_views",
+    "fold_adequacy_defaults",
+    "future_candidate_output_fields"
+  ],
+  "properties": {
+    "policy_name": {
+      "type": "string"
+    },
+    "official_gates_changed": {
+      "const": false
+    },
+    "paper_trading_approved": {
+      "const": false
+    },
+    "live_trading_approved": {
+      "const": false
+    },
+    "validation_levels": {
+      "type": "object",
+      "required": [
+        "module_level_validation",
+        "playbook_level_validation",
+        "paper_review_validation"
+      ]
+    },
+    "standard_fold_views": {
+      "type": "object",
+      "required": [
+        "existing_project_folds",
+        "half_year_folds",
+        "rolling_6_month_test_folds",
+        "quarterly_folds"
+      ]
+    },
+    "fold_adequacy_defaults": {
+      "type": "object",
+      "required": [
+        "module_fold_min_active_days",
+        "module_fold_min_trades",
+        "playbook_fold_min_active_days",
+        "playbook_fold_min_trades",
+        "low_activity_implies_no_signal"
+      ]
+    },
+    "future_candidate_output_fields": {
+      "type": "array",
+      "contains": {
+        "const": "validation_level"
+      }
+    }
+  }
+}

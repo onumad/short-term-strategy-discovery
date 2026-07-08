@@ -1,0 +1,54 @@
+[
+  {
+    "diagnostic_only_no_signals_generated": true,
+    "module_family": "range_expansion",
+    "proposed_module_name": "low_volatility_lunch_expansion",
+    "required_levels_features": "lunch range, RTH range percentile",
+    "risk_of_overfit": "medium; future scout should use a small bounded matrix and unchanged chronological validation",
+    "suggested_max_spec_budget_for_future_scout": 48,
+    "suggested_trade_window": "13:00-15:00",
+    "target_market_condition": "low_volatility_day",
+    "which_gap_it_targets": "low_volatility_expansion_days_with_no_module",
+    "why_it_is_different_from_10B_11A_12A_13A": "Targets lunch expansion after quiet context, unlike 10B/11A/12A/13A level-specific entries.",
+    "why_it_may_be_uncorrelated": "Targets sessions or intraday windows with weak/no current playbook coverage."
+  },
+  {
+    "diagnostic_only_no_signals_generated": true,
+    "module_family": "trend_continuation",
+    "proposed_module_name": "power_hour_continuation",
+    "required_levels_features": "power-hour range and intraday trend proxy",
+    "risk_of_overfit": "medium; future scout should use a small bounded matrix and unchanged chronological validation",
+    "suggested_max_spec_budget_for_future_scout": 48,
+    "suggested_trade_window": "14:30-15:45",
+    "target_market_condition": "power_hour_expansion",
+    "which_gap_it_targets": "power_hour_expansion_days_with_no_module",
+    "why_it_is_different_from_10B_11A_12A_13A": "Targets late continuation rather than overnight/opening/prior-RTH triggers.",
+    "why_it_may_be_uncorrelated": "Targets sessions or intraday windows with weak/no current playbook coverage."
+  },
+  {
+    "diagnostic_only_no_signals_generated": true,
+    "module_family": "prior_level_reaction",
+    "proposed_module_name": "previous_day_midpoint_reaction",
+    "required_levels_features": "prior RTH midpoint/high/low",
+    "risk_of_overfit": "medium; future scout should use a small bounded matrix and unchanged chronological validation",
+    "suggested_max_spec_budget_for_future_scout": 48,
+    "suggested_trade_window": "10:00-14:30",
+    "target_market_condition": "prior_level_interaction",
+    "which_gap_it_targets": "prior_level_interaction_not_covered_by_phase13a",
+    "why_it_is_different_from_10B_11A_12A_13A": "Uses previous-day midpoint reaction instead of Phase 13A high breakout.",
+    "why_it_may_be_uncorrelated": "Targets sessions or intraday windows with weak/no current playbook coverage."
+  },
+  {
+    "diagnostic_only_no_signals_generated": true,
+    "module_family": "pullback_continuation",
+    "proposed_module_name": "trend_day_late_pullback_continuation",
+    "required_levels_features": "trend-day proxy and late pullback level",
+    "risk_of_overfit": "medium; future scout should use a small bounded matrix and unchanged chronological validation",
+    "suggested_max_spec_budget_for_future_scout": 48,
+    "suggested_trade_window": "13:30-15:30",
+    "target_market_condition": "trend_day",
+    "which_gap_it_targets": "trend_days_with_no_module",
+    "why_it_is_different_from_10B_11A_12A_13A": "Targets late trend pullbacks, not opening-drive first pullback.",
+    "why_it_may_be_uncorrelated": "Targets sessions or intraday windows with weak/no current playbook coverage."
+  }
+]

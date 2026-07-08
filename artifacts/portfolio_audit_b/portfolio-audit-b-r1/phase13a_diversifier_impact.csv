@@ -1,0 +1,4 @@
+portfolio_mode,active_days_delta,fold_delta,best_day_concentration_delta,best_trade_concentration_delta,drawdown_delta,correlation_delta,phase13a_net_contribution,phase13a_trade_count,phase13a_active_days,keep_role_assessment
+raw_sum_diagnostic,0,0.0,-0.020781,-0.017445,-753.2,0.025623,1762.0,246,123,diversifier_module
+one_trade_at_a_time_chronological,37,0.0,-0.007809,-0.003944,112.75,0.025623,684.57,116,112,diversifier_module
+max_one_trade_per_session,37,-0.166666,-0.023316,-0.023316,-699.67,0.025623,1089.93,94,94,diversifier_module

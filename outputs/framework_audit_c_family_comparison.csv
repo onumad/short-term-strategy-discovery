@@ -1,0 +1,4 @@
+phase,candidates,avg_stress_pnl,avg_validation_pnl,avg_holdout_pnl,avg_trade_positive_prob,avg_daily_positive_prob,positive_without_top3_trades_count,positive_without_top3_days_count,avg_phase_null_percentile
+phase12a,1,953.49,41.79,226.88,0.93984,0.94076,1,1,0.979167
+phase10b,18,2074.068888888889,274.8733333333333,948.0288888888889,0.9340911111111111,0.9355988888888889,18,18,0.8333333333333334
+phase11a,1,1215.61,82.84,303.5,0.85188,0.85622,1,1,0.979167

@@ -1,0 +1,5 @@
+validation_level,reporting_rule,configurable_default,required_metric
+playbook_level_validation,minimum_active_days_per_fold,30,active_days_per_fold
+playbook_level_validation,minimum_trades_per_fold,30,trades_per_fold
+playbook_level_validation,fold_stability_and_concentration,required,"fold stability, concentration, drawdown, active days, module contribution"
+paper_review_validation,official_gates_unchanged,False,official_gates_changed=false and paper_trading_approved=false

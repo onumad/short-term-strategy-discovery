@@ -1,0 +1,21 @@
+{
+  "next_action": "research_signal_registry_e_add_phase16a_rare_modules",
+  "recommended_actions": [
+    "research_signal_registry_e_add_phase16a_rare_modules",
+    "phase16a_label_hygiene_patch",
+    "playbook_framework_e_rare_module_policy_integration"
+  ],
+  "rationale": "Phase 16A top positive uncorrelated candidates pass rare-module registration rules, but remain research-only and not tradable due to low activity.",
+  "phase16a_positive_uncorrelated_candidates_reviewed": 3,
+  "phase16a_positive_uncorrelated_candidates_passing_rare_rules": 3,
+  "phase16a_watchlist_rows_reviewed": 5,
+  "phase16a_watchlist_rows_blocked_by_hygiene": 5,
+  "official_gates_changed": false,
+  "paper_trading_approved": false,
+  "live_trading_approved": false,
+  "new_strategy_signals_generated": false,
+  "strategy_searches_run": false,
+  "candidate_results_changed": false,
+  "registries_mutated": false,
+  "rare_module_track_enabled": true
+}

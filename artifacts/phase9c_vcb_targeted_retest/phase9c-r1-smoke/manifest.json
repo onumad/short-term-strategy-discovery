@@ -1,0 +1,96 @@
+{
+  "artifacts": {
+    "manifest": "artifacts/phase9c_vcb_targeted_retest/phase9c-r1-smoke/manifest.json",
+    "report": "artifacts/phase9c_vcb_targeted_retest/phase9c-r1-smoke/report.md",
+    "results": "artifacts/phase9c_vcb_targeted_retest/phase9c-r1-smoke/results.csv",
+    "specs": "artifacts/phase9c_vcb_targeted_retest/phase9c-r1-smoke/specs.json"
+  },
+  "command": "./.venv/Scripts/python.exe scripts/run_phase9c_vcb_targeted_retest.py",
+  "config": {
+    "atr_cap_multiple": 1.0,
+    "buffer_ticks": 2,
+    "compression_methods": [
+      "range_percentile",
+      "atr_percentile",
+      "realized_vol_percentile"
+    ],
+    "compression_threshold": 0.2,
+    "concentration_limit": 0.15,
+    "drawdown_limit": -6000.0,
+    "entry_models": [
+      "next_bar_open",
+      "close_confirm_fill_next_open"
+    ],
+    "exit_models": [
+      "capped_opposite_box_stop_time_exit",
+      "close_back_inside_box_invalidation_with_hard_cap"
+    ],
+    "max_specs": 48,
+    "max_trades_per_day": 2,
+    "min_active_days": 40,
+    "min_trades": 80,
+    "next_action": "phase10a_overnight_range_breakout_fade",
+    "quick_stop_baseline_rate": 0.12,
+    "recent_sessions": 252,
+    "source_rows": 343739,
+    "source_symbol": "MNQ",
+    "spec_count": 48,
+    "step_sessions": 25,
+    "target_r": 2.0,
+    "test_sessions": 25,
+    "time_windows": [
+      "core_midday",
+      "extended_midday"
+    ],
+    "timeframes": [
+      5,
+      15
+    ],
+    "trade_concentration_limit": 0.08,
+    "trade_rows": 4802,
+    "train_sessions": 75,
+    "validation_sessions": 25,
+    "worst_fold_limit": -1500.0
+  },
+  "data_files": [
+    "data/raw/mnq_1m_databento_20230101_20260703.csv"
+  ],
+  "experiment": "phase9c_vcb_targeted_retest",
+  "family_counts": {
+    "volatility_compression_breakout": 48
+  },
+  "generated_at_utc": "2026-07-08T02:04:56+00:00",
+  "git": {
+    "branch": "master",
+    "commit": "1664da5",
+    "status_short": "M README.md\n M data_audit.md\n M src/short_term_edge/strategy_spec.py\n?? .hermes/plans/2026-07-06_215753-phase8-mgc-clean-family-pivot.md\n?? .hermes/plans/2026-07-06_223733-phase8a-complete-clean-family-sweep.md\n?? .hermes/plans/2026-07-06_233420-seven-hour-research-pivot.md\n?? .hermes/plans/2026-07-07_074627-self-project-review.md\n?? .hermes/plans/2026-07-07_075842-phase8h-mnq-vwap-concentration-exit-diagnostic.md\n?? .hermes/plans/2026-07-07_100540-phase8i-no-lookahead-time-session-filter.md\n?? .hermes/plans/2026-07-07_121317-phase8j-walk-forward-strategy-mapping.md\n?? .hermes/plans/2026-07-07_124513-phase8k-next-five-steps.md\n?? .hermes/plans/2026-07-07_141956-phase8l-fixed-filter-retest.md\n?? artifacts/\n?? outputs/phase7c_assumption_drift.csv\n?? outputs/phase7d_payout_diagnostic_results.csv\n?? outputs/phase8a_candidate_specs.json\n?? outputs/phase8a_mgc_clean_family_results.csv\n?? outputs/phase8b_failure_summary.csv\n?? outputs/phase8c_no_trade_filter_results.csv\n?? outputs/phase8d_hypothesis_queue.csv\n?? outputs/phase8e_event_scout_results.csv\n?? outputs/phase8f_diverse_candidate_probe_results.csv\n?? outputs/phase8f_diverse_candidate_specs.json\n?? outputs/phase8g_event_execution_calibration.csv\n?? outputs/phase8h_mnq_vwap_concentration_summary.csv\n?? outputs/phase8h_mnq_vwap_exit_shape_results.csv\n?? outputs/phase8h_mnq_vwap_overlap_summary.csv\n?? outputs/phase8h_mnq_vwap_trade_log.csv\n?? outputs/phase8i_deduped_mnq_vwap_trade_log.csv\n?? outputs/phase8i_no_lookahead_filter_results.csv\n?? outputs/phase8i_no_lookahead_filter_specs.json\n?? outputs/phase8j_filtered_trade_log.csv\n?? outputs/phase8j_strategy_spec.json\n?? outputs/phase8j_walk_forward_folds.csv\n?? outputs/phase8j_walk_forward_summary.csv\n?? outputs/phase8k_bucket_diagnostics.csv\n?? outputs/phase8k_candidate_actions.csv\n?? outputs/phase8k_next_step_queue.csv\n?? outputs/phase8k_session_diagnostics.csv\n?? outputs/phase8k_tagged_trades.csv\n?? outputs/phase8l_filter_retest_results.csv\n?? outputs/phase8l_filter_retest_specs.json\n?? outputs/phase8l_filtered_trade_logs.csv\n?? outputs/phase8m_candidate_results.csv\n?? outputs/phase8m_concentration_diagnostics.csv\n?? outputs/phase8m_daily_pnl.csv\n?? outputs/phase8m_exit_remapped_trades.csv\n?? outputs/phase8m_filtered_trade_logs.csv\n?? outputs/phase8m_outlier_session_diagnostics.csv\n?? outputs/phase8m_strategy_specs.json\n?? outputs/phase8m_walk_forward_folds.csv\n?? outputs/phase9a_candidate_results.csv\n?? outputs/phase9a_concentration_diagnostics.csv\n?? outputs/phase9a_daily_pnl.csv\n?? outputs/phase9a_strategy_specs.json\n?? outputs/phase9a_trade_logs.csv\n?? outputs/phase9a_walk_forward_folds.csv\n?? outputs/phase9b_candidate_results.csv\n?? outputs/phase9b_entry_timing_diagnostic.csv\n?? outputs/phase9b_exit_reason_summary.csv\n?? outputs/phase9b_mfe_mae_summary.csv\n?? outputs/phase9b_next_action_recommendation.json\n?? outputs/phase9b_session_loss_summary.csv\n?? outputs/phase9b_side_summary.csv\n?? outputs/phase9b_stop_target_diagnostic.csv\n?? outputs/phase9b_strategy_specs.csv\n?? outputs/phase9b_time_bucket_summary.csv\n?? outputs/phase9b_trade_attribution.csv\n?? outputs/phase9c_candidate_results.csv\n?? outputs/phase9c_concentration_diagnostics.csv\n?? outputs/phase9c_daily_pnl.csv\n?? outputs/phase9c_exit_reason_summary.csv\n?? outputs/phase9c_next_action_recommendation.json\n?? outputs/phase9c_stop_failure_summary.csv\n?? outputs/phase9c_strategy_specs.json\n?? outputs/phase9c_time_window_summary.csv\n?? outputs/phase9c_trade_logs.csv\n?? outputs/phase9c_walk_forward_folds.csv\n?? reports/phase7c_assumption_drift_report.md\n?? reports/phase7d_payout_diagnostic_report.md\n?? reports/phase8_research_pivot_summary.md\n?? reports/phase8a_mgc_clean_family_report.md\n?? reports/phase8b_failure_synthesis_report.md\n?? reports/phase8c_no_trade_filter_report.md\n?? reports/phase8d_hypothesis_queue_report.md\n?? reports/phase8e_event_scout_report.md\n?? reports/phase8f_diverse_candidate_probe_report.md\n?? reports/phase8g_event_execution_calibration_report.md\n?? reports/phase8h_mnq_vwap_concentration_exit_diagnostic_report.md\n?? reports/phase8i_no_lookahead_filter_report.md\n?? reports/phase8j_walk_forward_strategy_mapping_report.md\n?? reports/phase8k_fold_failure_diagnostic_report.md\n?? reports/phase8l_fixed_filter_retest_report.md\n?? reports/phase8m_risk_concentration_diagnostic_report.md\n?? reports/phase9a_mnq_volatility_compression_breakout_report.md\n?? reports/phase9b_vcb_failure_attribution_report.md\n?? reports/phase9c_vcb_targeted_retest_report.md\n?? reports/self_project_review_2026-07-07.md\n?? scripts/run_phase7c_assumption_drift_audit.py\n?? scripts/run_phase7d_payout_diagnostic.py\n?? scripts/run_phase8a_mgc_clean_family_search.py\n?? scripts/run_phase8b_failure_synthesis.py\n?? scripts/run_phase8c_no_trade_filter_diagnostic.py\n?? scripts/run_phase8d_hypothesis_queue.py\n?? scripts/run_phase8e_event_scout.py\n?? scripts/run_phase8f_diverse_candidate_probe.py\n?? scripts/run_phase8g_event_execution_calibration.py\n?? scripts/run_phase8h_mnq_vwap_concentration_exit_diagnostic.py\n?? scripts/run_phase8i_no_lookahead_filter.py\n?? scripts/run_phase8j_walk_forward_strategy_mapping.py\n?? scripts/run_phase8k_fold_failure_diagnostic.py\n?? scripts/run_phase8l_fixed_filter_retest.py\n?? scripts/run_phase8m_risk_concentration_diagnostic.py\n?? scripts/run_phase9a_mnq_volatility_compression_breakout.py\n?? scripts/run_phase9b_vcb_failure_attribution.py\n?? scripts/run_phase9c_vcb_targeted_retest.py\n?? src/short_term_edge/experiments/\n?? src/short_term_edge/phase7c.py\n?? src/short_term_edge/phase7d.py\n?? src/short_term_edge/phase8a.py\n?? src/short_term_edge/phase8b.py\n?? src/short_term_edge/phase8c.py\n?? src/short_term_edge/phase8d_hypothesis_queue.py\n?? src/short_term_edge/phase8e_event_scout.py\n?? src/short_term_edge/phase8f_diverse_candidate_probe.py\n?? src/short_term_edge/phase8g_event_execution_calibration.py\n?? src/short_term_edge/phase8h_mnq_vwap_concentration_exit_diagnostic.py\n?? src/short_term_edge/phase8i_no_lookahead_filter.py\n?? src/short_term_edge/phase8j_walk_forward_strategy_mapping.py\n?? src/short_term_edge/phase8k_fold_failure_diagnostic.py\n?? src/short_term_edge/phase8l_fixed_filter_retest.py\n?? src/short_term_edge/phase8m_risk_concentration_diagnostic.py\n?? src/short_term_edge/phase9a_volatility_compression_breakout.py\n?? src/short_term_edge/phase9b_vcb_failure_attribution.py\n?? src/short_term_edge/phase9c_vcb_targeted_retest.py\n?? tests/test_experiment_artifacts.py\n?? tests/test_phase7c.py\n?? tests/test_phase7d.py\n?? tests/test_phase8a.py\n?? tests/test_phase8a_runner.py\n?? tests/test_phase8b.py\n?? tests/test_phase8c.py\n?? tests/test_phase8d_hypothesis_queue.py\n?? tests/test_phase8e_event_scout.py\n?? tests/test_phase8f_diverse_candidate_probe.py\n?? tests/test_phase8g_event_execution_calibration.py\n?? tests/test_phase8h_mnq_vwap_concentration_exit_diagnostic.py\n?? tests/test_phase8i_no_lookahead_filter.py\n?? tests/test_phase8j_walk_forward_strategy_mapping.py\n?? tests/test_phase8k_fold_failure_diagnostic.py\n?? tests/test_phase8l_fixed_filter_retest.py\n?? tests/test_phase8m_risk_concentration_diagnostic.py\n?? tests/test_phase9a_volatility_compression_breakout.py\n?? tests/test_phase9b_vcb_failure_attribution.py\n?? tests/test_phase9c_vcb_targeted_retest.py"
+  },
+  "guardrails": [
+    "research/simulation only",
+    "no live trading approval",
+    "no broker adapters, order routing, API-key storage, webhooks, or automated execution",
+    "targeted short-only retest only; no generalized optimizer"
+  ],
+  "label_counts": {
+    "phase9c_rejected_fold_instability": 2,
+    "phase9c_rejected_low_activity": 24,
+    "phase9c_rejected_negative_stress": 17,
+    "phase9c_rejected_negative_validation": 5
+  },
+  "legacy_artifacts": {
+    "candidate_results": "outputs/phase9c_candidate_results.csv",
+    "concentration_diagnostics": "outputs/phase9c_concentration_diagnostics.csv",
+    "daily_pnl": "outputs/phase9c_daily_pnl.csv",
+    "exit_reason_summary": "outputs/phase9c_exit_reason_summary.csv",
+    "recommendation": "outputs/phase9c_next_action_recommendation.json",
+    "report": "reports/phase9c_vcb_targeted_retest_report.md",
+    "stop_failure_summary": "outputs/phase9c_stop_failure_summary.csv",
+    "strategy_specs": "outputs/phase9c_strategy_specs.json",
+    "time_window_summary": "outputs/phase9c_time_window_summary.csv",
+    "trade_logs": "outputs/phase9c_trade_logs.csv",
+    "walk_forward_folds": "outputs/phase9c_walk_forward_folds.csv"
+  },
+  "result_row_count": 48,
+  "run_id": "phase9c-r1-smoke",
+  "selected_specs_count": 48
+}

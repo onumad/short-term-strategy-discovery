@@ -1,0 +1,139 @@
+{
+  "policy_name": "validation_framework_d_standardize_playbook_folds",
+  "diagnostic_only": true,
+  "research_only_guardrail": "Research/simulation only. No live trading, broker adapters, order routing, webhooks, credential storage, automated execution, or LLM-driven trade decisions.",
+  "official_gates_changed": false,
+  "paper_trading_approved": false,
+  "live_trading_approved": false,
+  "new_strategy_signals_generated": false,
+  "strategy_searches_run": false,
+  "candidate_results_changed": false,
+  "candidates_promoted": false,
+  "official_gate_policy": {
+    "no_official_paper_review_threshold_is_loosened": true,
+    "official_promotion_gates_remain_unchanged": true,
+    "alternative_folds_are_diagnostic_companions_unless_explicitly_promoted_later_by_human_review": true,
+    "quarterly_folds_are_official_promotion_gates": false,
+    "rolling_3_month_folds_are_official_promotion_gates": false,
+    "audit_c_gate_sensitivity_official_gate_changes_seen": false
+  },
+  "validation_levels": {
+    "module_level_validation": {
+      "used_for": "individual specialized modules",
+      "may_be_sparse": true,
+      "requires_fold_adequacy_before_interpreting_pass_fail": true,
+      "low_activity_alone_means_no_signal": false,
+      "low_activity_can_block_tradability": true,
+      "required_diagnostics": [
+        "active_days_per_fold",
+        "trades_per_fold",
+        "folds_below_min_activity",
+        "fold_result_interpretable",
+        "module_level_positive_fold_pct"
+      ]
+    },
+    "playbook_level_validation": {
+      "used_for": "combined module portfolios and schedulers",
+      "responsible_for_regular_opportunity": true,
+      "required_diagnostics": [
+        "fold_stability",
+        "concentration",
+        "drawdown",
+        "active_days",
+        "module_contribution",
+        "playbook_level_positive_fold_pct"
+      ]
+    },
+    "paper_review_validation": {
+      "strictest_level": true,
+      "official_gates_changed": false,
+      "paper_trading_approved_by_this_policy": false,
+      "no_official_paper_review_threshold_loosened": true,
+      "alternative_folds_diagnostic_unless_later_human_promoted": true
+    }
+  },
+  "standard_fold_views": {
+    "existing_project_folds": {
+      "role": "continuity_primary_reported_view",
+      "required_in_future_reports": true,
+      "diagnostic_companion_only": false,
+      "official_promotion_gate": false,
+      "description": "Retained for continuity with prior research and still reported.",
+      "adequacy_warning_required": false
+    },
+    "half_year_folds": {
+      "role": "diagnostic_companion_less_coarse_view",
+      "required_in_future_reports": true,
+      "diagnostic_companion_only": true,
+      "official_promotion_gate": false,
+      "description": "Diagnostic companion fold view; Audit C showed it may be less coarse than existing folds.",
+      "adequacy_warning_required": false
+    },
+    "rolling_6_month_test_folds": {
+      "role": "diagnostic_regime_sensitivity_view",
+      "required_in_future_reports": true,
+      "diagnostic_companion_only": true,
+      "official_promotion_gate": false,
+      "description": "Diagnostic regime-sensitivity view; not an official promotion gate.",
+      "adequacy_warning_required": false
+    },
+    "quarterly_folds": {
+      "role": "diagnostic_stress_view",
+      "required_in_future_reports": true,
+      "diagnostic_companion_only": true,
+      "official_promotion_gate": false,
+      "description": "Diagnostic stress view. It may be too sparse for rare modules, so adequacy warnings are required.",
+      "adequacy_warning_required": true
+    }
+  },
+  "fold_adequacy_defaults": {
+    "thresholds_are_configurable_defaults": true,
+    "module_fold_min_active_days": 10,
+    "module_fold_min_trades": 10,
+    "playbook_fold_min_active_days": 30,
+    "playbook_fold_min_trades": 30,
+    "low_activity_implies_no_signal": false,
+    "low_activity_can_block_tradability": true
+  },
+  "rare_module_fold_adequacy_rules": {
+    "report_active_days_per_fold": true,
+    "report_trades_per_fold": true,
+    "report_folds_below_min_activity": true,
+    "report_whether_fold_result_is_interpretable": true,
+    "do_not_mark_no_signal_solely_because_rare_module_folds_are_sparse": true,
+    "tradability_may_still_be_blocked_by_low_activity": true
+  },
+  "future_candidate_output_fields": [
+    "validation_level",
+    "primary_fold_view",
+    "companion_fold_views",
+    "fold_adequacy_status",
+    "folds_below_min_activity",
+    "module_level_positive_fold_pct",
+    "playbook_level_positive_fold_pct",
+    "fold_design_sensitivity_flag",
+    "official_gates_passed",
+    "paper_trading_approved"
+  ],
+  "reporting_language": [
+    "fold result is low-activity / not fully interpretable",
+    "positive research signal but not tradable",
+    "playbook-level fold stability failed",
+    "alternative fold views are diagnostic only",
+    "official gates unchanged"
+  ],
+  "audit_c_evidence_summary": {
+    "observed_fold_views": [
+      "calendar_year_folds",
+      "existing_project_folds",
+      "expanding_train_recent_test_style",
+      "half_year_folds",
+      "quarterly_folds",
+      "rolling_3_month_test_folds",
+      "rolling_6_month_test_folds"
+    ],
+    "fold_designs_with_material_sensitivity_rows": 1006,
+    "audit_c_policy_fold_conclusions_change_by_design": true,
+    "audit_c_policy_alternative_folds_diagnostic_only": true
+  }
+}

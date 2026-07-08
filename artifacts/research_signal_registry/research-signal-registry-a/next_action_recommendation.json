@@ -1,0 +1,11 @@
+{
+  "next_action": "maintain_two_tier_research_signal_registry",
+  "official_gates_changed": false,
+  "paper_trading_approved": false,
+  "rationale": "Audit C supports separating signal evidence from tradability/practice readiness while preserving official gates.",
+  "registry_counts": {
+    "parked_research_signal": 18,
+    "rare_setup_research_signal": 19
+  },
+  "source_audit_c_next_action": "create_two_tier_research_signal_labeling"
+}

@@ -1,0 +1,330 @@
+[
+  {
+    "canonical_id": "MGC_opening_range_breakout_tf1_bf64976fac",
+    "entry": {
+      "name": "close_outside_range",
+      "params": {
+        "min_range": 1.0,
+        "or_minutes": 15
+      }
+    },
+    "exit": {
+      "name": "r_multiple",
+      "params": {
+        "stop_mode": "half_range",
+        "target": "1R"
+      }
+    },
+    "family": "opening_range_breakout",
+    "instrument": "MGC",
+    "notes": "Phase 8A MGC clean-family pivot: opening-range breakout away from failed legacy combo legs.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 1
+      }
+    },
+    "timeframe": 1,
+    "version": 1
+  },
+  {
+    "canonical_id": "MGC_vwap_reclaim_rejection_tf1_1158b61782",
+    "entry": {
+      "name": "vwap_cross",
+      "params": {
+        "mode": "both"
+      }
+    },
+    "exit": {
+      "name": "fixed_ticks",
+      "params": {
+        "stop_ticks": 12,
+        "target_ticks": 18
+      }
+    },
+    "family": "vwap_reclaim_rejection",
+    "instrument": "MGC",
+    "notes": "Phase 8A MGC clean-family pivot: VWAP reclaim/rejection without Phase 7 pullback leg.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 2
+      }
+    },
+    "timeframe": 1,
+    "version": 1
+  },
+  {
+    "canonical_id": "MGC_prior_session_levels_tf1_67e2185347",
+    "entry": {
+      "name": "prior_level_reaction",
+      "params": {
+        "mode": "break_hold"
+      }
+    },
+    "exit": {
+      "name": "fixed_ticks",
+      "params": {
+        "stop_ticks": 12,
+        "target_ticks": 18
+      }
+    },
+    "family": "prior_session_levels",
+    "instrument": "MGC",
+    "notes": "Phase 8A MGC clean-family pivot: prior-session level reaction.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 2
+      }
+    },
+    "timeframe": 1,
+    "version": 1
+  },
+  {
+    "canonical_id": "MGC_opening_range_breakout_tf3_d6cbc67510",
+    "entry": {
+      "name": "close_outside_range",
+      "params": {
+        "min_range": 1.0,
+        "or_minutes": 15
+      }
+    },
+    "exit": {
+      "name": "r_multiple",
+      "params": {
+        "stop_mode": "half_range",
+        "target": "1R"
+      }
+    },
+    "family": "opening_range_breakout",
+    "instrument": "MGC",
+    "notes": "Phase 8A MGC clean-family pivot: opening-range breakout away from failed legacy combo legs.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 1
+      }
+    },
+    "timeframe": 3,
+    "version": 1
+  },
+  {
+    "canonical_id": "MGC_vwap_reclaim_rejection_tf3_30b0712f36",
+    "entry": {
+      "name": "vwap_cross",
+      "params": {
+        "mode": "both"
+      }
+    },
+    "exit": {
+      "name": "fixed_ticks",
+      "params": {
+        "stop_ticks": 12,
+        "target_ticks": 18
+      }
+    },
+    "family": "vwap_reclaim_rejection",
+    "instrument": "MGC",
+    "notes": "Phase 8A MGC clean-family pivot: VWAP reclaim/rejection without Phase 7 pullback leg.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 2
+      }
+    },
+    "timeframe": 3,
+    "version": 1
+  },
+  {
+    "canonical_id": "MGC_prior_session_levels_tf3_4efe652db2",
+    "entry": {
+      "name": "prior_level_reaction",
+      "params": {
+        "mode": "break_hold"
+      }
+    },
+    "exit": {
+      "name": "fixed_ticks",
+      "params": {
+        "stop_ticks": 12,
+        "target_ticks": 18
+      }
+    },
+    "family": "prior_session_levels",
+    "instrument": "MGC",
+    "notes": "Phase 8A MGC clean-family pivot: prior-session level reaction.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 2
+      }
+    },
+    "timeframe": 3,
+    "version": 1
+  },
+  {
+    "canonical_id": "MGC_opening_range_breakout_tf1_ef5aa59979",
+    "entry": {
+      "name": "close_outside_range",
+      "params": {
+        "min_range": 1.0,
+        "or_minutes": 15
+      }
+    },
+    "exit": {
+      "name": "r_multiple",
+      "params": {
+        "stop_mode": "half_range",
+        "target": "2R"
+      }
+    },
+    "family": "opening_range_breakout",
+    "instrument": "MGC",
+    "notes": "Phase 8A MGC clean-family pivot: opening-range breakout away from failed legacy combo legs.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 1
+      }
+    },
+    "timeframe": 1,
+    "version": 1
+  },
+  {
+    "canonical_id": "MGC_vwap_reclaim_rejection_tf1_409aacc670",
+    "entry": {
+      "name": "vwap_cross",
+      "params": {
+        "mode": "both"
+      }
+    },
+    "exit": {
+      "name": "fixed_ticks",
+      "params": {
+        "stop_ticks": 18,
+        "target_ticks": 27
+      }
+    },
+    "family": "vwap_reclaim_rejection",
+    "instrument": "MGC",
+    "notes": "Phase 8A MGC clean-family pivot: VWAP reclaim/rejection without Phase 7 pullback leg.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 2
+      }
+    },
+    "timeframe": 1,
+    "version": 1
+  },
+  {
+    "canonical_id": "MGC_prior_session_levels_tf1_6f57f6d041",
+    "entry": {
+      "name": "prior_level_reaction",
+      "params": {
+        "mode": "prior_close_reclaim"
+      }
+    },
+    "exit": {
+      "name": "fixed_ticks",
+      "params": {
+        "stop_ticks": 12,
+        "target_ticks": 18
+      }
+    },
+    "family": "prior_session_levels",
+    "instrument": "MGC",
+    "notes": "Phase 8A MGC clean-family pivot: prior-session level reaction.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 2
+      }
+    },
+    "timeframe": 1,
+    "version": 1
+  },
+  {
+    "canonical_id": "MGC_opening_range_breakout_tf3_68e76e40a4",
+    "entry": {
+      "name": "close_outside_range",
+      "params": {
+        "min_range": 1.0,
+        "or_minutes": 15
+      }
+    },
+    "exit": {
+      "name": "r_multiple",
+      "params": {
+        "stop_mode": "half_range",
+        "target": "2R"
+      }
+    },
+    "family": "opening_range_breakout",
+    "instrument": "MGC",
+    "notes": "Phase 8A MGC clean-family pivot: opening-range breakout away from failed legacy combo legs.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 1
+      }
+    },
+    "timeframe": 3,
+    "version": 1
+  },
+  {
+    "canonical_id": "MGC_vwap_reclaim_rejection_tf3_d52ab5e0a5",
+    "entry": {
+      "name": "vwap_cross",
+      "params": {
+        "mode": "both"
+      }
+    },
+    "exit": {
+      "name": "fixed_ticks",
+      "params": {
+        "stop_ticks": 18,
+        "target_ticks": 27
+      }
+    },
+    "family": "vwap_reclaim_rejection",
+    "instrument": "MGC",
+    "notes": "Phase 8A MGC clean-family pivot: VWAP reclaim/rejection without Phase 7 pullback leg.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 2
+      }
+    },
+    "timeframe": 3,
+    "version": 1
+  },
+  {
+    "canonical_id": "MGC_prior_session_levels_tf3_edded20b7c",
+    "entry": {
+      "name": "prior_level_reaction",
+      "params": {
+        "mode": "prior_close_reclaim"
+      }
+    },
+    "exit": {
+      "name": "fixed_ticks",
+      "params": {
+        "stop_ticks": 12,
+        "target_ticks": 18
+      }
+    },
+    "family": "prior_session_levels",
+    "instrument": "MGC",
+    "notes": "Phase 8A MGC clean-family pivot: prior-session level reaction.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 2
+      }
+    },
+    "timeframe": 3,
+    "version": 1
+  }
+]

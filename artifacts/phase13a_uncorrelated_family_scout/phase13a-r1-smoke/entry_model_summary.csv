@@ -1,0 +1,3 @@
+group,trades,gross_pnl,net_pnl,stress_pnl,avg_mfe,avg_mae
+close_confirm_fill_next_open,2336,-6739.9,-13140.62,-15476.62,73.3369006849315,67.88869863013699
+two_bar_confirm_fill_next_open,2046,-8988.38,-14594.490000000002,-16640.49,72.15542521994135,69.56011730205279

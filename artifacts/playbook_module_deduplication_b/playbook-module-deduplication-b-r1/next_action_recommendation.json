@@ -1,0 +1,15 @@
+{
+  "diagnostic_only_no_signals_generated": true,
+  "live_trading_approved": false,
+  "modules_to_deprioritize_count": 23,
+  "modules_to_keep_count": 11,
+  "modules_to_park_count": 10,
+  "next_action": "playbook_scheduler_d_overlay_retest",
+  "official_gates_changed": false,
+  "paper_trading_approved": false,
+  "rationale": "Deduplication overlay is clear and based on replicated Module Pruning Audit A plus Scheduler C pruning evidence.",
+  "redundancy_cluster_count": 8,
+  "registry_mutation": false,
+  "seed_cluster_decision": "keep_representative=;deprioritize_redundant=phase10b::MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_all_ranges_all_gaps_all_touches_mt1;phase10b::MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_all_ranges_all_gaps_all_touches_mt2;phase10b::MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_all_ranges_all_gaps_first_touch_only_mt1;phase10b::MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_all_ranges_all_gaps_first_touch_only_mt2",
+  "seed_suspect_module": "phase10b::MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_all_ranges_all_gaps_first_touch_only_mt1"
+}

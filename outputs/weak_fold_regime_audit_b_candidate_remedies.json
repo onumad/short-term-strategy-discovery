@@ -1,0 +1,32 @@
+[
+  {
+    "changes": "strategy logic",
+    "diagnostic_only_no_implementation": true,
+    "evidence_from_audit": "Weak-fold market feature frequencies differ from non-weak days.",
+    "overfit_risk": "high; regime filters can overfit small fold samples",
+    "recommended_next_task": "phase16a_targeted_regime_module_scout",
+    "remedy_name": "no_trade_regime_filter",
+    "target_weak_fold_or_regime": "weak-fold regime cluster",
+    "why_it_might_help": "Could avoid conditions where current playbook repeatedly loses."
+  },
+  {
+    "changes": "strategy logic",
+    "diagnostic_only_no_implementation": true,
+    "evidence_from_audit": "Weak days show identifiable trend/range/volatility traits.",
+    "overfit_risk": "medium-high; future scout must be bounded and chronological",
+    "recommended_next_task": "phase16a_targeted_regime_module_scout",
+    "remedy_name": "add_hedging/opposite-regime module",
+    "target_weak_fold_or_regime": "dominant weak-fold market regime",
+    "why_it_might_help": "A module designed for the opposite payoff shape may reduce fold drawdowns."
+  },
+  {
+    "changes": "scheduler logic",
+    "diagnostic_only_no_implementation": true,
+    "evidence_from_audit": "Weak folds include overlapping module fire-days and/or scheduler skipped overlaps.",
+    "overfit_risk": "medium; must not be tuned to individual dates",
+    "recommended_next_task": "playbook_scheduler_a_priority_audit",
+    "remedy_name": "scheduler_priority_adjustment",
+    "target_weak_fold_or_regime": "overlap-heavy weak folds",
+    "why_it_might_help": "Changing priority could let later helpful modules replace early losers."
+  }
+]

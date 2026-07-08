@@ -1,0 +1,41 @@
+{
+  "diagnostic_only": true,
+  "inputs_loaded": [
+    "outputs/playbook_module_registry.csv",
+    "outputs/research_signal_registry.csv",
+    "outputs/module_pruning_audit_a_module_diagnostics.csv",
+    "outputs/module_pruning_audit_a_pruning_variants.csv",
+    "outputs/module_pruning_audit_a_portfolio_results.csv",
+    "outputs/module_pruning_audit_a_redundancy_pairs.csv",
+    "outputs/module_pruning_audit_a_next_action_recommendation.json",
+    "outputs/playbook_scheduler_c_pruning_policy_results.csv",
+    "outputs/playbook_scheduler_c_daily_pnl.csv",
+    "outputs/playbook_scheduler_c_walk_forward_folds.csv",
+    "outputs/playbook_scheduler_c_concentration.csv",
+    "outputs/playbook_scheduler_c_overlap_summary.csv",
+    "outputs/playbook_scheduler_c_module_acceptance_summary.csv",
+    "outputs/playbook_scheduler_c_pruned_module_summary.csv",
+    "outputs/playbook_scheduler_c_next_action_recommendation.json",
+    "outputs/playbook_scheduler_b_module_acceptance_summary.csv",
+    "outputs/playbook_scheduler_b_next_action_recommendation.json",
+    "outputs/phase10b_trade_logs.csv",
+    "outputs/phase11a_trade_logs.csv",
+    "outputs/phase12a_trade_logs.csv",
+    "outputs/phase13a_trade_logs.csv",
+    "outputs/phase14a_trade_logs.csv",
+    "outputs/phase15a_trade_logs.csv"
+  ],
+  "live_trading_approved": false,
+  "new_signals_generated": false,
+  "official_gates_changed": false,
+  "overlay_version": "playbook_module_deduplication_b_v1",
+  "paper_trading_approved": false,
+  "registry_mutation": false,
+  "seed_cluster_modules": [
+    "phase10b::MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_all_ranges_all_gaps_all_touches_mt1",
+    "phase10b::MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_all_ranges_all_gaps_all_touches_mt2",
+    "phase10b::MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_all_ranges_all_gaps_first_touch_only_mt1",
+    "phase10b::MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_all_ranges_all_gaps_first_touch_only_mt2"
+  ],
+  "seed_suspect_module": "phase10b::MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_all_ranges_all_gaps_first_touch_only_mt1"
+}

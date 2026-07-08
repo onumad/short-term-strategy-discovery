@@ -1,0 +1,11 @@
+failure_category,phase7c_count,phase7d_count,phase8a_count,total_count,interpretation
+ambiguity,1,32,3,36,"Intrabar uncertainty remains a research blocker, not a tuning problem."
+drawdown,0,32,4,36,Loss path breaches strict risk limits before any payout/promotion case is credible.
+concentration,0,0,12,12,PnL is too dependent on one day/trade; require distribution filters before promotion.
+split_instability,0,0,9,9,Validation/holdout weakness means the signal is not stable enough for promotion.
+cost_slippage,1,0,6,7,Costs/stress erase the apparent edge; fewer higher-quality trades are needed.
+negative_expectancy,0,0,4,4,Raw net performance is negative before advanced validation.
+data_window_drift,2,0,0,2,Legacy and current windows differ; avoid broadening until provenance is explicit.
+objective_drift,2,0,0,2,Payout-style objectives and robustness objectives are not equivalent.
+overtrading,0,0,2,2,Candidates are active in too many sessions; next work should decide when not to trade.
+policy_drift,1,0,0,1,Risk policy assumptions changed enough to require diagnostic isolation.

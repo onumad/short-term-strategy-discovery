@@ -1,0 +1,63 @@
+{
+  "inputs": {
+    "phase7c": "outputs/phase7c_assumption_drift.csv",
+    "phase7d": "outputs/phase7d_payout_diagnostic_results.csv",
+    "phase8a": "outputs/phase8a_mgc_clean_family_results.csv",
+    "phase8a_manifest": "artifacts/phase8a_mgc_clean_family/phase8a-r1-smoke/manifest.json"
+  },
+  "result": {
+    "decision": "Stop entry-variant grinding; use Phase 8B evidence to design pre-entry no-trade/session-selection filters before spending more MGC compute.",
+    "phase7c_high_severity_count": 4,
+    "phase7c_rows": 7,
+    "phase7d_rows": 32,
+    "phase7d_success_count": 0,
+    "phase8a_label_counts": {
+      "rejected": 2
+    },
+    "phase8a_scored_count": 2,
+    "phase8a_selected_specs_count": 12,
+    "recommended_next_step": "phase8c_no_trade_session_filters",
+    "top_failure_categories": [
+      {
+        "failure_category": "ambiguity",
+        "interpretation": "Intrabar uncertainty remains a research blocker, not a tuning problem.",
+        "phase7c_count": 1,
+        "phase7d_count": 32,
+        "phase8a_count": 3,
+        "total_count": 36
+      },
+      {
+        "failure_category": "drawdown",
+        "interpretation": "Loss path breaches strict risk limits before any payout/promotion case is credible.",
+        "phase7c_count": 0,
+        "phase7d_count": 32,
+        "phase8a_count": 4,
+        "total_count": 36
+      },
+      {
+        "failure_category": "concentration",
+        "interpretation": "PnL is too dependent on one day/trade; require distribution filters before promotion.",
+        "phase7c_count": 0,
+        "phase7d_count": 0,
+        "phase8a_count": 12,
+        "total_count": 12
+      },
+      {
+        "failure_category": "split_instability",
+        "interpretation": "Validation/holdout weakness means the signal is not stable enough for promotion.",
+        "phase7c_count": 0,
+        "phase7d_count": 0,
+        "phase8a_count": 9,
+        "total_count": 9
+      },
+      {
+        "failure_category": "cost_slippage",
+        "interpretation": "Costs/stress erase the apparent edge; fewer higher-quality trades are needed.",
+        "phase7c_count": 1,
+        "phase7d_count": 0,
+        "phase8a_count": 6,
+        "total_count": 7
+      }
+    ]
+  }
+}

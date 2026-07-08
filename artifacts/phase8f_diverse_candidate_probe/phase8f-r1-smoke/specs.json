@@ -1,0 +1,90 @@
+[
+  {
+    "canonical_id": "MNQ_vwap_pullback_continuation_tf5_a08cca486b",
+    "entry": {
+      "name": "vwap_pullback",
+      "params": {
+        "min_slope_ticks": 0,
+        "pullback_ref": "vwap",
+        "pullback_ticks": 8,
+        "start_minute": 15
+      }
+    },
+    "exit": {
+      "name": "fixed_ticks",
+      "params": {
+        "stop_ticks": 40,
+        "target_ticks": 60
+      }
+    },
+    "family": "vwap_pullback_continuation",
+    "instrument": "MNQ",
+    "notes": "Phase 8F diverse probe from Phase 8E event scout: VWAP pullback continuation.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 2,
+        "side_filter": "long"
+      }
+    },
+    "timeframe": 5,
+    "version": 1
+  },
+  {
+    "canonical_id": "MNQ_vwap_reclaim_rejection_tf1_81bf62d078",
+    "entry": {
+      "name": "vwap_cross",
+      "params": {
+        "mode": "reclaim"
+      }
+    },
+    "exit": {
+      "name": "fixed_ticks",
+      "params": {
+        "stop_ticks": 40,
+        "target_ticks": 60
+      }
+    },
+    "family": "vwap_reclaim_rejection",
+    "instrument": "MNQ",
+    "notes": "Phase 8F diverse probe from Phase 8E event scout: VWAP reclaim/rejection.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 2,
+        "side_filter": "long"
+      }
+    },
+    "timeframe": 1,
+    "version": 1
+  },
+  {
+    "canonical_id": "MNQ_opening_range_failure_tf3_497a7aff68",
+    "entry": {
+      "name": "close_back_inside",
+      "params": {
+        "min_range": 10.0,
+        "or_minutes": 15,
+        "target": "opposite"
+      }
+    },
+    "exit": {
+      "name": "range_target",
+      "params": {
+        "target": "opposite"
+      }
+    },
+    "family": "opening_range_failure",
+    "instrument": "MNQ",
+    "notes": "Phase 8F diverse probe from Phase 8E event scout: opening-range fade mapped to opening_range_failure.",
+    "risk": {
+      "name": "one_open_position",
+      "params": {
+        "max_trades_per_day": 2,
+        "side_filter": "long"
+      }
+    },
+    "timeframe": 3,
+    "version": 1
+  }
+]

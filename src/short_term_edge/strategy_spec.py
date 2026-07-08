@@ -22,7 +22,7 @@ ALLOWED_ENTRY_RULES = {
     "vwap_cross",
     "prior_level_reaction",
 }
-ALLOWED_EXIT_RULES = {"range_target", "fixed_ticks", "r_multiple"}
+ALLOWED_EXIT_RULES = {"range_target", "fixed_ticks", "r_multiple", "horizon_close"}
 ALLOWED_RISK_RULES = {"one_open_position"}
 
 

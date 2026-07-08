@@ -1,0 +1,23 @@
+{
+  "best_net_pnl": 1876.3,
+  "best_overlay_variant": "overlay_exclude_parked",
+  "best_portfolio_mode": "max_one_trade_per_session",
+  "best_priority_policy": "concentration_adjusted_priority",
+  "best_scheduler_d_label": "scheduler_d_no_improvement",
+  "concentration_improved_vs_scheduler_c_best": false,
+  "deprioritization_worked_nearly_as_well_as_exclusion": false,
+  "diagnostic_only_no_signals_generated": true,
+  "exclusion_worked_better_than_deprioritization": false,
+  "folds_improved_vs_scheduler_c_best": false,
+  "live_trading_approved": false,
+  "next_action": "validation_framework_audit_c_fold_design",
+  "official_gates_changed": false,
+  "paper_trading_approved": false,
+  "rationale": "Fold instability remains broad across overlay variants.",
+  "raw_sum_diagnostic_used_as_candidate": false,
+  "registry_mutation": false,
+  "scheduler_review_row_count": 0,
+  "seed_cluster_decision": "manually_reviewed",
+  "seed_suspect_module": "phase10b::MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_all_ranges_all_gaps_first_touch_only_mt1",
+  "weak_fold_regime_filters_used": false
+}

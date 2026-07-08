@@ -1,0 +1,7 @@
+{
+  "next_action": "playbook_framework_e_rare_module_policy_integration",
+  "rationale": "Phase 16A rare high-vol mixed modules were added as rare setup diversifiers; integrate rare-module policy into future playbook evaluation before Portfolio Audit E.",
+  "official_gates_changed": false,
+  "paper_trading_approved": false,
+  "rare_module_track_enabled": true
+}

@@ -1,0 +1,20 @@
+{
+  "best_net_pnl": 7554.56,
+  "best_portfolio_mode": "one_trade_at_a_time_chronological",
+  "best_priority_policy": "hybrid_validation_then_correlation",
+  "best_pruning_variant": "remove_high_redundancy_pairs",
+  "best_scheduler_c_label": "scheduler_c_improves_folds_and_concentration",
+  "concentration_improved_vs_scheduler_b_best": true,
+  "diagnostic_only_no_signals_generated": true,
+  "folds_improved_vs_scheduler_b_best": true,
+  "live_trading_approved": false,
+  "module_pruning_a_improvement_replicated": true,
+  "next_action": "playbook_module_deduplication_b_review",
+  "official_gates_changed": false,
+  "paper_trading_approved": false,
+  "rationale": "remove_high_redundancy_pairs replicated fold and concentration improvement under Scheduler C.",
+  "raw_sum_diagnostic_used_as_candidate": false,
+  "registry_files_mutated": false,
+  "scheduler_review_row_count": 0,
+  "seed_suspect_module": "phase10b::MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_all_ranges_all_gaps_first_touch_only_mt1"
+}
