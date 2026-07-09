@@ -14,6 +14,7 @@ from short_term_edge.framework_g_policy_contracts import (  # noqa: E402
     bounded_llm_task_registry,
     counterfactual_policy_contract,
     evaluate_counterfactual_policy_impact,
+    research_risk_policy,
     validate_llm_output_envelope,
 )
 
@@ -42,6 +43,17 @@ class FrameworkGPolicyContractsTests(unittest.TestCase):
         metadata["generates_new_entries"] = True
         with self.assertRaisesRegex(ValueError, "cannot generate"):
             evaluate_counterfactual_policy_impact(_metrics(110), _metrics(120), metadata)
+
+    def test_research_risk_policy_is_concrete_but_not_stage_ready(self) -> None:
+        policy = research_risk_policy()
+        self.assertEqual(policy["instrument"], "MNQ")
+        self.assertEqual(policy["position_constraints"]["contracts"], 1)
+        self.assertEqual(policy["position_constraints"]["max_concurrent_positions"], 1)
+        self.assertEqual(policy["instrument_economics"]["round_turn_fees"], 1.74)
+        self.assertFalse(policy["position_constraints"]["model_may_create_entry"])
+        self.assertFalse(policy["independent_risk_engine_present"])
+        self.assertTrue(policy["daily_lockouts"]["missing_lockouts_block_later_stage_promotion"])
+        self.assertEqual(policy["risk_policy_completeness_status"], "research_overlay_only_not_stage_promotion_ready")
 
     def test_llm_candidate_proposal_is_disabled_and_all_tasks_are_non_authoritative(self) -> None:
         registry = bounded_llm_task_registry()
@@ -97,7 +109,7 @@ def _metadata() -> dict[str, object]:
         "overlay_action": "veto_existing_candidate_at_fixed_threshold",
         "threshold": 0.7,
         "scheduler_policy_version": "scheduler-f",
-        "risk_policy_version": "risk-research-v1",
+        "risk_policy_version": "research_counterfactual_risk_policy/v1",
         "cost_and_slippage_config": "mnq-default-v1",
         "generates_new_entries": False,
         "changes_size_or_risk": False,

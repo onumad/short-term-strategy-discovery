@@ -12,9 +12,11 @@ if str(SRC_ROOT) not in sys.path:
 from short_term_edge.framework_g_research_release import (  # noqa: E402
     PREDICTION_SCHEMA_VERSION,
     authorization_policy,
+    calibration_fit_policy,
     evaluate_model_review_eligibility,
     ml_evaluation_policy,
     prediction_schema,
+    validate_calibration_plan,
     validate_prediction_envelope,
 )
 
@@ -74,6 +76,25 @@ class FrameworkGResearchReleaseTests(unittest.TestCase):
         self.assertEqual(policy["drift_and_coverage"]["missing_feature_behavior"], "abstain")
         self.assertTrue(policy["counterfactual_policy_impact"]["required_before_signal_input_review"])
         self.assertFalse(policy["approval_behavior"]["automatic_signal_input_approval"])
+
+    def test_calibration_plan_cannot_fit_or_select_on_consumed_holdouts(self) -> None:
+        policy = calibration_fit_policy()
+        self.assertIn("holdout", policy["prohibited_fit_partitions"])
+        plan = {
+            "model_release_id": "ml-baseline-b:r2",
+            "calibration_method": "platt_logistic",
+            "fit_partitions": ["cross_fitted_oof"],
+            "threshold_selection_partitions": ["validation"],
+            "existing_holdout_status": "consumed_exploratory_selection_evidence",
+            "future_confirmation_status": "not_available",
+        }
+        validated = validate_calibration_plan(plan)
+        self.assertTrue(validated["exploratory_calibration_authorized"])
+        self.assertFalse(validated["confirmatory_evidence"])
+        self.assertFalse(validated["approved_as_signal_input"])
+        plan["fit_partitions"] = ["holdout"]
+        with self.assertRaisesRegex(ValueError, "prohibited fit"):
+            validate_calibration_plan(plan)
 
 
 def _prediction() -> dict[str, object]:

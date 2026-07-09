@@ -18,11 +18,14 @@ from short_term_edge.experiments.artifacts import (  # noqa: E402
 from short_term_edge.framework_g_policy_contracts import (  # noqa: E402
     COUNTERFACTUAL_POLICY_VERSION,
     LLM_TASK_REGISTRY_VERSION,
+    RESEARCH_RISK_POLICY_VERSION,
     bounded_llm_task_registry,
     counterfactual_policy_contract,
+    research_risk_policy,
 )
 from short_term_edge.framework_g_research_release import (  # noqa: E402
     EVALUATION_POLICY_VERSION,
+    CALIBRATION_FIT_POLICY_VERSION,
     MODEL_RELEASE_SCHEMA_VERSION,
     PREDICTION_SCHEMA_VERSION,
     FrameworkGPaths,
@@ -44,10 +47,12 @@ def main() -> None:
     )
     counterfactual_path = output_dir / "framework_g_counterfactual_policy_contract.json"
     llm_registry_path = output_dir / "framework_g_bounded_llm_task_registry.json"
+    risk_policy_path = output_dir / "framework_g_research_risk_policy.json"
     recommendation_path = output_dir / "framework_g_next_action_recommendation.json"
     report_path = report_dir / "framework_g_research_release_report.md"
     write_json_artifact(counterfactual_policy_contract(), counterfactual_path)
     write_json_artifact(bounded_llm_task_registry(), llm_registry_path)
+    write_json_artifact(research_risk_policy(), risk_policy_path)
     recommendation = {
         "next_action": "ml_baseline_b_calibration_drift_and_policy_impact_audit",
         "rationale": "Framework G now defines research-release provenance, strict non-authoritative prediction and LLM contracts, model-specific evaluation gates, and a deterministic counterfactual policy-impact boundary.",
@@ -64,7 +69,7 @@ def main() -> None:
     write_json_artifact(recommendation, recommendation_path)
     report = render_report(recommendation)
     report_path.write_text(report, encoding="utf-8")
-    for path in (counterfactual_path, llm_registry_path, recommendation_path, report_path):
+    for path in (counterfactual_path, llm_registry_path, risk_policy_path, recommendation_path, report_path):
         (run_paths.run_dir / path.name).write_bytes(path.read_bytes())
 
     result = pd.DataFrame(
@@ -76,7 +81,9 @@ def main() -> None:
                 "prediction_schema_version": PREDICTION_SCHEMA_VERSION,
                 "model_release_schema_version": MODEL_RELEASE_SCHEMA_VERSION,
                 "evaluation_policy_version": EVALUATION_POLICY_VERSION,
+                "calibration_fit_policy_version": CALIBRATION_FIT_POLICY_VERSION,
                 "counterfactual_policy_version": COUNTERFACTUAL_POLICY_VERSION,
+                "research_risk_policy_version": RESEARCH_RISK_POLICY_VERSION,
                 "llm_task_registry_version": LLM_TASK_REGISTRY_VERSION,
                 "approved_as_signal_input": False,
                 "paper_trading_approved": False,
@@ -90,7 +97,9 @@ def main() -> None:
             "prediction": PREDICTION_SCHEMA_VERSION,
             "model_release": MODEL_RELEASE_SCHEMA_VERSION,
             "evaluation_policy": EVALUATION_POLICY_VERSION,
+            "calibration_fit_policy": CALIBRATION_FIT_POLICY_VERSION,
             "counterfactual_policy": COUNTERFACTUAL_POLICY_VERSION,
+            "research_risk_policy": RESEARCH_RISK_POLICY_VERSION,
             "llm_task_registry": LLM_TASK_REGISTRY_VERSION,
         },
         "authorization_stage": "research",
@@ -102,6 +111,7 @@ def main() -> None:
         **paths,
         "counterfactual_policy": counterfactual_path,
         "llm_task_registry": llm_registry_path,
+        "research_risk_policy": risk_policy_path,
         "recommendation": recommendation_path,
         "report": report_path,
     }
@@ -148,6 +158,7 @@ def render_report(recommendation: dict[str, object]) -> str:
             "- Strict ML model-release and prediction envelopes with abstention and unknown-field rejection.",
             "- ML evaluation policy covering causality, readiness, calibration, drift, OOD, coverage, and policy impact.",
             "- Deterministic counterfactual overlay contract that cannot create entries, increase size, or change risk.",
+            "- Versioned one-contract MNQ research risk policy; missing daily lockouts and independent risk still block later-stage promotion.",
             "- Bounded LLM task registry; candidate proposals are disabled and every task is non-authoritative.",
             "",
             "## Approval boundary",

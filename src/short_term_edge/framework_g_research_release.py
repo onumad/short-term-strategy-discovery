@@ -14,6 +14,7 @@ AUTHORIZATION_STAGE = "research"
 PREDICTION_SCHEMA_VERSION = "ml_prediction_envelope/v1"
 MODEL_RELEASE_SCHEMA_VERSION = "ml_model_release/v1"
 EVALUATION_POLICY_VERSION = "ml_evaluation_policy/v1"
+CALIBRATION_FIT_POLICY_VERSION = "ml_calibration_fit_policy/v1"
 
 PREDICTION_FIELDS = (
     "schema_version",
@@ -178,6 +179,58 @@ def ml_evaluation_policy() -> dict[str, Any]:
     }
 
 
+def calibration_fit_policy() -> dict[str, Any]:
+    return {
+        "schema_version": CALIBRATION_FIT_POLICY_VERSION,
+        "authorization_stage": AUTHORIZATION_STAGE,
+        "allowed_fit_partitions": ["train", "validation", "cross_fitted_oof"],
+        "prohibited_fit_partitions": ["holdout", "future_unseen_confirmation"],
+        "allowed_threshold_selection_partitions": ["validation", "cross_fitted_oof"],
+        "prohibited_threshold_selection_partitions": ["holdout", "future_unseen_confirmation"],
+        "baseline_b_existing_holdouts_status": "consumed_exploratory_selection_evidence",
+        "baseline_b_existing_holdouts_confirmatory": False,
+        "future_unseen_confirmation_required": True,
+        "calibration_may_set_signal_input_approval": False,
+        "approved_as_signal_input_default": False,
+        "paper_trading_approved": False,
+        "live_trading_approved": False,
+    }
+
+
+def validate_calibration_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
+    required = {
+        "model_release_id",
+        "calibration_method",
+        "fit_partitions",
+        "threshold_selection_partitions",
+        "existing_holdout_status",
+        "future_confirmation_status",
+    }
+    if missing := sorted(required - set(plan)):
+        raise ValueError(f"calibration plan missing fields: {missing}")
+    policy = calibration_fit_policy()
+    fit = {str(value) for value in plan["fit_partitions"]}
+    threshold = {str(value) for value in plan["threshold_selection_partitions"]}
+    if invalid := sorted(fit - set(policy["allowed_fit_partitions"])):
+        raise ValueError(f"calibration plan uses prohibited fit partitions: {invalid}")
+    if invalid := sorted(threshold - set(policy["allowed_threshold_selection_partitions"])):
+        raise ValueError(f"calibration plan uses prohibited threshold partitions: {invalid}")
+    if plan["existing_holdout_status"] != "consumed_exploratory_selection_evidence":
+        raise ValueError("calibration plan must mark existing holdouts as consumed")
+    if plan["future_confirmation_status"] not in {"not_available", "reserved_unseen"}:
+        raise ValueError("calibration plan has invalid future confirmation status")
+    return {
+        **dict(plan),
+        "schema_version": "validated_ml_calibration_plan/v1",
+        "authorization_stage": AUTHORIZATION_STAGE,
+        "exploratory_calibration_authorized": True,
+        "confirmatory_evidence": False,
+        "approved_as_signal_input": False,
+        "paper_trading_approved": False,
+        "live_trading_approved": False,
+    }
+
+
 def validate_prediction_envelope(payload: Mapping[str, Any]) -> dict[str, Any]:
     keys = set(payload)
     missing = sorted(set(PREDICTION_FIELDS) - keys)
@@ -287,6 +340,7 @@ def write_ml_contract_artifacts(paths: FrameworkGPaths) -> dict[str, Path]:
         "prediction_schema": prediction_schema(),
         "model_release_schema": model_release_schema(),
         "ml_evaluation_policy": ml_evaluation_policy(),
+        "calibration_fit_policy": calibration_fit_policy(),
     }
     written: dict[str, Path] = {}
     for name, payload in payloads.items():

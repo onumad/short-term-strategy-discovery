@@ -2,10 +2,13 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
+from .instruments import get_instrument
+
 
 COUNTERFACTUAL_POLICY_VERSION = "counterfactual_model_overlay/v1"
 LLM_TASK_REGISTRY_VERSION = "bounded_llm_task_registry/v1"
 LLM_OUTPUT_ENVELOPE_VERSION = "bounded_llm_output_envelope/v1"
+RESEARCH_RISK_POLICY_VERSION = "research_counterfactual_risk_policy/v1"
 
 
 def counterfactual_policy_contract() -> dict[str, Any]:
@@ -73,6 +76,59 @@ def counterfactual_policy_contract() -> dict[str, Any]:
     }
 
 
+def research_risk_policy() -> dict[str, Any]:
+    mnq = get_instrument("MNQ")
+    return {
+        "schema_version": RESEARCH_RISK_POLICY_VERSION,
+        "authorization_stage": "research",
+        "scope": "offline counterfactual replay only",
+        "instrument": "MNQ",
+        "instrument_economics": {
+            "tick_size": mnq.tick_size,
+            "tick_value": mnq.tick_value,
+            "point_value": mnq.point_value,
+            "round_turn_fees": mnq.round_turn_fees,
+            "base_slippage_ticks_per_side": mnq.base_slippage_ticks_per_side,
+            "stress_slippage_ticks_per_side": mnq.stress_slippage_ticks_per_side,
+        },
+        "position_constraints": {
+            "contracts": 1,
+            "max_concurrent_positions": 1,
+            "scheduler_mode": "one_trade_at_a_time_chronological",
+            "model_may_increase_contracts": False,
+            "model_may_create_entry": False,
+        },
+        "trade_risk_constraints": {
+            "preserve_registered_stop": True,
+            "preserve_registered_target": True,
+            "preserve_registered_flatten_time": True,
+            "model_may_change_stop_target_or_flatten": False,
+        },
+        "session_constraints": {
+            "timezone": "America/New_York",
+            "rth_interval": "[09:30,16:00)",
+            "session_mapping": "local_calendar_date_after_18_00_not_exchange_calendar_aware",
+        },
+        "daily_lockouts": {
+            "implemented_in_current_default_scheduler": False,
+            "loss_lockout": None,
+            "profit_lockout": None,
+            "missing_lockouts_block_later_stage_promotion": True,
+        },
+        "risk_policy_completeness_status": "research_overlay_only_not_stage_promotion_ready",
+        "counterfactual_model_actions": [
+            "abstain_on_invalid_model_output",
+            "veto_existing_candidate_at_fixed_threshold",
+            "priority_tiebreak_among_existing_candidates",
+        ],
+        "independent_risk_engine_present": False,
+        "approved_as_signal_input": False,
+        "paper_trading_approved": False,
+        "shadow_execution_approved": False,
+        "live_trading_approved": False,
+    }
+
+
 def evaluate_counterfactual_policy_impact(
     baseline: Mapping[str, Any], overlay: Mapping[str, Any], metadata: Mapping[str, Any]
 ) -> dict[str, Any]:
@@ -91,6 +147,8 @@ def evaluate_counterfactual_policy_impact(
         raise ValueError("counterfactual overlay cannot generate new entries")
     if _as_bool(metadata.get("changes_size_or_risk", False)):
         raise ValueError("counterfactual overlay cannot change size or risk")
+    if metadata["risk_policy_version"] != RESEARCH_RISK_POLICY_VERSION:
+        raise ValueError("counterfactual overlay risk policy version mismatch")
 
     failures: list[str] = []
     for field in ("stress_pnl", "validation_pnl", "holdout_pnl", "walk_forward_stress_pnl"):

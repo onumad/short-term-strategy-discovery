@@ -30,7 +30,7 @@ from .experiments.artifacts import (
     content_sha256,
     write_experiment_manifest,
 )
-from .framework_g_research_release import MODEL_RELEASE_SCHEMA_VERSION
+from .framework_g_research_release import CALIBRATION_FIT_POLICY_VERSION, MODEL_RELEASE_SCHEMA_VERSION
 from .ml_dataset_a_day_regime import RESEARCH_ONLY_GUARDRAIL
 from .phase_common import ensure_directory, write_csv_artifact, write_json_artifact
 
@@ -529,6 +529,7 @@ def build_model_release_manifest(
         "feature_contract_version": f"ml_dataset_b_feature_dictionary/sha256:{feature_hash[:16]}",
         "label_contract_version": f"ml_target_d_label_dictionary/sha256:{label_hash[:16]}",
         "calibration_version": None,
+        "calibration_fit_policy_version": CALIBRATION_FIT_POLICY_VERSION,
         "training_config": {
             "l2_penalty": config.l2_penalty,
             "learning_rate": config.learning_rate,
