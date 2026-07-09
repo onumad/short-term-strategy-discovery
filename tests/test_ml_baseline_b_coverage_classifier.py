@@ -19,7 +19,16 @@ from short_term_edge.ml_baseline_b_coverage_classifier import (  # noqa: E402
     build_feature_sets,
     build_recommendation,
     build_stability_summary,
+    deserialize_logistic_model,
+    serialize_logistic_model,
     validate_inputs,
+    validate_serialized_model_parity,
+)
+from short_term_edge.ml_baseline_a_regime_classifier import (  # noqa: E402
+    MlBaselineAConfig,
+    fit_logistic_regression_numpy,
+    fit_preprocessor,
+    transform_features,
 )
 
 
@@ -76,6 +85,34 @@ class MlBaselineBCoverageClassifierTests(unittest.TestCase):
         source = (PROJECT_ROOT / "src" / "short_term_edge" / "ml_baseline_b_coverage_classifier.py").read_text(encoding="utf-8").lower()
         for token in ("broker", "order routing", "to_csv(config.module_registry", "construct_scheduled_trades", "candidate_results_changed\": true"):
             self.assertNotIn(token, source)
+
+    def test_logistic_model_round_trip_reproduces_predictions(self) -> None:
+        frame = pd.DataFrame({"x": [0.0, 1.0, 2.0, 3.0], "category": ["a", "b", "a", "b"]})
+        preprocessor = fit_preprocessor(frame, ("x", "category"))
+        x_train = transform_features(frame, preprocessor)
+        config = MlBaselineAConfig(
+            dataset_path=Path("dataset"), feature_dictionary_path=Path("features"),
+            label_dictionary_path=Path("labels"), output_dir=Path("outputs"),
+            report_dir=Path("reports"), artifact_dir=Path("artifacts"), iterations=20,
+        )
+        model = fit_logistic_regression_numpy(x_train, pd.Series([0, 0, 1, 1]).to_numpy(dtype=float), preprocessor, config)
+        payload = serialize_logistic_model(model, TARGETS[0], PRIMARY_SPLIT, "pre_rth_only")
+        restored = deserialize_logistic_model(payload)
+        self.assertEqual(restored.preprocessor.raw_features, model.preprocessor.raw_features)
+        validate_serialized_model_parity(payload, model, frame)
+
+    def test_recommendation_marks_holdouts_consumed_and_requires_future_data(self) -> None:
+        rows = []
+        for variant in SPLIT_VARIANTS:
+            rows.append(_metric(variant, "majority_class_baseline", 0.40, 0.50))
+            rows.append(_metric(variant, "logistic_regression_numpy", 0.45, 0.55))
+        stability = build_stability_summary(pd.DataFrame(rows))
+        recommendation = build_recommendation(pd.DataFrame(rows), stability)
+        self.assertEqual(recommendation["evaluation_status"], "exploratory_holdouts_consumed_for_model_window_selection")
+        self.assertFalse(recommendation["confirmatory_evidence"])
+        self.assertTrue(recommendation["holdout_reuse_prohibited_for_confirmation"])
+        self.assertTrue(recommendation["future_unseen_confirmation_required"])
+        self.assertFalse(recommendation["approved_as_signal_input"])
 
 
 def _metric(variant: str, model: str, f1: float, balanced_accuracy: float) -> dict[str, object]:
