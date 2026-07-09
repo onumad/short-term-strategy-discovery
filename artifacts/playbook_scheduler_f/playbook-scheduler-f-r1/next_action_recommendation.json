@@ -1,0 +1,7 @@
+{
+  "next_action": "phase17a_next_gap_module_scout_without_rare_scheduler_inclusion",
+  "rationale": "Rare modules remain tracked as research signals but should be excluded from default scheduler construction until more evidence is available.",
+  "official_gates_changed": false,
+  "paper_trading_approved": false,
+  "default_include_rare_modules_in_scheduler": false
+}

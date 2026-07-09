@@ -123,3 +123,7 @@ E. Only then consider targeted retest or review packet.
 ## Framework E rare-module policy note
 
 Future registry and portfolio-audit reports should treat Phase 16A-style rows as rare positive research signal / rare setup diversifier candidates only when rare-module evidence rules pass. Low activity / fold result not fully interpretable does not convert positive signal evidence to no_signal, but the module remains not tradable by itself and paper trading not approved. Portfolio contribution required before further review; official gates unchanged.
+
+## Scheduler F rare-module scheduler policy note
+
+Scheduler E found that rare modules should remain tracked as research/playbook registry signals but should be excluded from default active scheduler candidate sets until more evidence/data is available. Rare modules may be included only in explicit rare-module or diversifier audits. Low activity does not erase signal evidence and Phase 16A rare modules are not deleted or rejected as no_signal, but low activity still blocks tradability. Official gates remain unchanged and paper trading remains not approved.

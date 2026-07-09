@@ -1,0 +1,42 @@
+{
+  "artifacts": {
+    "manifest": "artifacts/playbook_scheduler_f/playbook-scheduler-f-r1/manifest.json",
+    "report": "artifacts/playbook_scheduler_f/playbook-scheduler-f-r1/report.md",
+    "results": "artifacts/playbook_scheduler_f/playbook-scheduler-f-r1/results.csv",
+    "specs": "artifacts/playbook_scheduler_f/playbook-scheduler-f-r1/specs.json"
+  },
+  "command": "./.venv/Scripts/python.exe scripts/build_playbook_scheduler_policy.py",
+  "config": {
+    "source": "existing Scheduler E, registry, and rare-module policy artifacts only"
+  },
+  "data_files": [],
+  "experiment": "playbook_scheduler_f",
+  "family_counts": {},
+  "generated_at_utc": "2026-07-09T00:50:44+00:00",
+  "git": {
+    "branch": "master",
+    "commit": "09552da",
+    "status_short": "M playbook_research_objective.md\n?? scripts/build_playbook_scheduler_policy.py\n?? scripts/run_playbook_scheduler_e_rare_module_priority_audit.py\n?? src/short_term_edge/playbook_scheduler_e_rare_module_priority_audit.py\n?? src/short_term_edge/playbook_scheduler_policy.py\n?? tests/test_playbook_scheduler_e_rare_module_priority_audit.py\n?? tests/test_playbook_scheduler_policy.py"
+  },
+  "guardrails": [
+    "research/simulation only",
+    "no new signals generated",
+    "no strategy searches run",
+    "candidate results unchanged",
+    "official gates unchanged",
+    "paper trading not approved",
+    "live trading not approved",
+    "rare modules excluded from default scheduler"
+  ],
+  "label_counts": {
+    "rare_modules_registry_only_excluded_from_default_scheduler": 1
+  },
+  "legacy_artifacts": {
+    "next_action_recommendation": "outputs/playbook_scheduler_f_next_action_recommendation.json",
+    "policy": "outputs/playbook_scheduler_policy.json",
+    "report": "reports/playbook_scheduler_f_rare_module_exclusion_policy_report.md"
+  },
+  "result_row_count": 1,
+  "run_id": "playbook-scheduler-f-r1",
+  "selected_specs_count": 0
+}
