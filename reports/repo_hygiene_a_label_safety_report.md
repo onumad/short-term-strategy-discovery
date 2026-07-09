@@ -1,17 +1,22 @@
-# Repo Hygiene A + Label Safety A Report
+# Repo Hygiene A Formatting Repair Report
 
-## What changed
+## Scope
 
-- `requirements.txt` was inspected and is already normalized to one dependency per line with the same dependency constraints.
-- `.gitignore` now includes explicit generated/local research artifact ignores and Python/cache ignores.
-- `README.md` now includes a short repo-hygiene and label-safety note.
-- `repo_hygiene_a_plan.md` documents safe future artifact cleanup without deleting or untracking anything now.
-- `src/short_term_edge/label_safety.py` adds deterministic label safety helpers.
-- `tests/test_label_safety.py` and `tests/test_repo_hygiene_a.py` add focused safety/hygiene tests.
+Repo Hygiene A formatting repair only. This is not a strategy phase. No strategy scripts were run, no candidate results were changed, official gates remain unchanged, and paper trading is not approved.
 
-## Why requirements.txt was fixed/confirmed
+## Files repaired or confirmed
 
-Dependency constraints should be one per non-empty line so `pip install -r requirements.txt`, review diffs, and future dependency audits remain deterministic and readable. The file currently contains exactly:
+- `requirements.txt`: rewritten as one dependency per line.
+- `.gitignore`: rewritten as a real multi-line ignore file with Python, OS/editor, and generated/local research artifact sections.
+- `src/short_term_edge/label_safety.py`: rewritten as formatted Python with module docstring, imports, constants, helper functions, type hints, and fail-closed validation behavior.
+- `tests/test_label_safety.py`: formatted focused tests for label safety import and no-paper/no-gate guardrails.
+- `tests/test_repo_hygiene_a.py`: formatted focused tests for requirements and `.gitignore` hygiene.
+- `repo_hygiene_a_plan.md`: inspected and left as the existing safe future cleanup plan.
+- `reports/repo_hygiene_a_label_safety_report.md`: updated with this formatting repair summary.
+
+## requirements.txt content
+
+The dependency file is multi-line and contains exactly one dependency per line:
 
 - `pandas>=2.2`
 - `numpy>=2.0`
@@ -23,9 +28,15 @@ Dependency constraints should be one per non-empty line so `pip install -r requi
 
 No dependencies were added and no packages were installed.
 
-## What .gitignore now protects
+## .gitignore content
 
-Generated/local research artifacts are ignored going forward:
+The ignore file is multi-line and has separate sections for:
+
+- Python caches and virtual environment paths.
+- OS/editor noise.
+- Generated/local research artifacts.
+
+Generated/local artifact folders are present on separate lines:
 
 - `data/raw/`
 - `outputs/`
@@ -34,42 +45,18 @@ Generated/local research artifacts are ignored going forward:
 - `charts/`
 - `trade_logs/`
 
-Python/local cache protection includes:
+Important git behavior: `.gitignore` affects future untracked files only. It does not delete or untrack files that are already tracked.
 
-- `.venv/`
-- `__pycache__/`
-- `*.pyc`
-- `*.py[cod]`
-- `.pytest_cache/`
-- `.mypy_cache/`
-- `.ruff_cache/`
-- `.ipynb_checkpoints/`
-
-## What was not deleted
-
-No data, outputs, reports, artifacts, charts, trade logs, files, or git-tracked paths were deleted or untracked in this task. `.gitignore` does not remove already tracked files from git history.
-
-## Safe future cleanup
-
-A future cleanup branch can remove tracked generated artifacts from the git index while preserving local files with commands like these, after review. These commands were not run in this task:
-
-```bash
-git rm -r --cached outputs reports artifacts charts trade_logs
-git rm -r --cached data/raw
-```
-
-Review with `git status --short` and `git diff --cached --stat` before committing any future cleanup. Large artifacts may belong in Git LFS, releases, or private archival storage. Raw Databento-derived data may have licensing/redistribution concerns and should not be public unless explicitly allowed.
-
-## Label safety rules
+## Label safety behavior
 
 - Labels never imply paper-trading approval.
 - Missing `paper_trading_approved` defaults to `false`.
-- Explicit false-like `paper_trading_approved` values are preserved as false.
-- Explicit true-like `paper_trading_approved` values raise because current project outputs must remain false.
-- `candidate_for_paper_review` means review packet language only, not paper-trading approval.
-- Legacy `paper_test_candidate` is treated as legacy/research language, not approval.
-- `watchlist_needs_more_history` is treated as research/watchlist language only, not paper-trading approval.
-- Unknown labels do not imply approval.
+- `candidate_for_paper_review` is review-packet language only.
+- `paper_test_candidate` is legacy/research language only.
+- `watchlist_needs_more_history` is not approval.
+- Explicit true-like `paper_trading_approved` raises `ValueError`.
+- Explicit true-like `official_gates_changed` raises `ValueError`.
+- Explicit true-like `official_gates_passed` raises `ValueError`.
 
 ## Guardrail confirmations
 
@@ -83,11 +70,13 @@ Review with `git status --short` and `git diff --cached --stat` before committin
 - No promotions made.
 - No live trading, broker adapters, order routing, API-key storage, webhooks, automated execution, or LLM-driven trade decisions added.
 
-## Tests run
+## Verification run
 
+- `./.venv/Scripts/python.exe -m py_compile src/short_term_edge/label_safety.py`
+  - Result: passed; `label_safety.py` compiles.
 - `./.venv/Scripts/python.exe -m unittest tests.test_label_safety -v`
-  - Result: passed, 7 tests.
+  - Result: passed, 10 tests.
 - `./.venv/Scripts/python.exe -m unittest tests.test_repo_hygiene_a -v`
   - Result: passed, 5 tests.
 - `./.venv/Scripts/python.exe -m unittest discover -s tests -v`
-  - Result: passed, 385 tests in 42.029s.
+  - Result: passed, 388 tests in 41.850s.
