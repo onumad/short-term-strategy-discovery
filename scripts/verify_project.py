@@ -151,7 +151,7 @@ def _run_named_tests(failures: list[str]) -> None:
 
 
 def _run_full_tests(root: Path, failures: list[str]) -> None:
-    suite = unittest.defaultTestLoader.discover(str(root / "tests"), top_level_dir=str(root))
+    suite = unittest.defaultTestLoader.discover(str(root / "tests"))
     result = unittest.TextTestRunner(verbosity=1).run(suite)
     if not result.wasSuccessful():
         failures.append("full unit test suite failed")
