@@ -1,0 +1,4 @@
+interface:
+  display_name: "Short-Term Strategy Discovery"
+  short_description: "Guide causal playbook research in this repository"
+  default_prompt: "Use $short-term-strategy-discovery to inspect the current research state and recommend or implement the next validated milestone."
