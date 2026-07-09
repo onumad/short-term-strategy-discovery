@@ -27,6 +27,7 @@ QUICK_TESTS = (
     "tests.test_framework_g_policy_contracts",
     "tests.test_framework_g_research_release",
     "tests.test_label_safety",
+    "tests.test_ml_calibration_drift_policy_audit_a",
     "tests.test_release_verification",
 )
 CORE_LOCKED_PACKAGES = {
@@ -46,7 +47,10 @@ RELEASE_MANIFESTS = (
 LINT_PATHS = (
     "src/short_term_edge/release_verification.py",
     "scripts/run_project_python.py",
+    "scripts/run_ml_calibration_drift_policy_audit_a.py",
     "scripts/verify_project.py",
+    "src/short_term_edge/ml_calibration_drift_policy_audit_a.py",
+    "tests/test_ml_calibration_drift_policy_audit_a.py",
     "tests/test_release_verification.py",
 )
 
