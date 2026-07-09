@@ -30,11 +30,16 @@ Use the project virtual environment:
 ./.venv/Scripts/python.exe
 ```
 
-Install or refresh dependencies with:
+Install the fully tested runtime/research environment with:
 
 ```bash
-./.venv/Scripts/python.exe -m pip install -r requirements.txt
+./.venv/Scripts/python.exe -m pip install --upgrade pip==26.1.2
+./.venv/Scripts/python.exe -m pip install -r requirements.lock.txt
 ```
+
+For development, install `requirements-dev.lock.txt` instead. The unlocked
+`requirements.txt` and `requirements-dev.txt` declare supported dependency
+ranges; the lock files are the reproducible local and CI environments.
 
 ## Canonical Verification
 
@@ -43,6 +48,29 @@ Run the full test suite before reporting code changes as complete:
 ```bash
 ./.venv/Scripts/python.exe -m unittest discover -s tests -v
 ```
+
+The cross-platform verification entry point provides three profiles:
+
+```bash
+./.venv/Scripts/python.exe scripts/verify_project.py --profile quick
+./.venv/Scripts/python.exe scripts/verify_project.py --profile full
+./.venv/Scripts/python.exe scripts/verify_project.py --profile release
+```
+
+`quick` is hermetic and runs in Windows CI. `full` runs the canonical test
+suite, including local-data integration tests. `release` additionally requires
+a clean worktree and local raw data, then independently rehashes both frozen
+release manifests and deserializes the Baseline B model bundle.
+
+Optional local hooks can be installed with:
+
+```bash
+./.venv/Scripts/python.exe -m pre_commit install
+```
+
+The current Ruff gate covers the new foundation tooling. It should expand to
+other modules as their existing lint findings are retired, without unrelated
+bulk formatting changes.
 
 For data loading or audit-assumption changes, also run:
 
