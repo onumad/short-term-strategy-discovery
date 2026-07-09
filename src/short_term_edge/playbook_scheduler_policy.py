@@ -90,8 +90,32 @@ def rare_modules_from_registry(registry: pd.DataFrame) -> pd.DataFrame:
 
 
 def default_scheduler_universe(registry: pd.DataFrame) -> pd.DataFrame:
+    """Return the historical replay universe retained for label reproducibility."""
     universe = registry[~rare_module_mask(registry) & ~quarantine_mask(registry)].copy()
     return universe.sort_values(["phase", "candidate_id"]).reset_index(drop=True)
+
+
+def default_admission_universe(registry: pd.DataFrame) -> pd.DataFrame:
+    """Fail-closed current admission under Conditional Specialist Framework H."""
+    rows = registry.copy()
+    required_columns = {
+        "research_track",
+        "tradability_status",
+        "official_gates_passed",
+        "portfolio_contribution_status",
+        "activation_runtime_binding_status",
+    }
+    if not required_columns <= set(rows.columns):
+        return rows.iloc[0:0].copy()
+    regular = rows["research_track"].astype(str).eq("regular_practice_candidate")
+    tradable = rows["tradability_status"].astype(str).eq("review_packet_candidate")
+    gates = rows["official_gates_passed"].map(_as_bool)
+    contribution = rows["portfolio_contribution_status"].astype(str).isin(
+        {"positive_incremental_contribution", "accepted_diversifier", "improves_playbook"}
+    )
+    runtime_bound = rows["activation_runtime_binding_status"].astype(str).eq("runtime_bound_and_tested")
+    admitted = rows[regular & tradable & gates & contribution & runtime_bound & ~rare_module_mask(rows) & ~quarantine_mask(rows)].copy()
+    return admitted.sort_values(["phase", "candidate_id"]).reset_index(drop=True)
 
 
 def rare_low_activity_scheduler_mapping(signal_evidence_status: str = "positive_research_signal") -> dict[str, Any]:
@@ -124,6 +148,7 @@ def build_playbook_scheduler_policy(data: Mapping[str, Any]) -> dict[str, Any]:
     rare = rare_modules_from_registry(registry)
     quarantined = registry[quarantine_mask(registry)].copy().sort_values(["phase", "candidate_id"])
     default_universe = default_scheduler_universe(registry)
+    admitted_universe = default_admission_universe(registry)
     scheduler_e = data["scheduler_e_recommendation"]
 
     return {
@@ -147,8 +172,14 @@ def build_playbook_scheduler_policy(data: Mapping[str, Any]) -> dict[str, Any]:
         "phase16a_rare_modules_not_rejected_as_no_signal": True,
         "low_activity_does_not_erase_signal_evidence": True,
         "low_activity_blocks_tradability": True,
+        "scheduler_semantics_version": "conditional_specialist_scheduler/v1",
+        "no_trade_is_valid": True,
+        "minimum_trades_per_day": None,
+        "forced_daily_activity": False,
+        "eligibility_layers": ["condition_eligible", "research_eligible", "default_scheduler_admitted"],
         "recommended_default_scheduler_universe": {
-            "description": "Default active scheduler universe excludes rare_setup_research_signal / rare_setup_module rows until more evidence is available.",
+            "description": "Compatibility identifier for the historical research replay universe; not current default admission under Framework H.",
+            "semantic_status": "historical_research_replay_universe_not_current_default_admission",
             "module_count": int(len(default_universe)),
             "module_ids": default_universe.get("module_id", pd.Series(dtype=object)).astype(str).tolist(),
             "signal_keys": [f"{row.phase}::{row.candidate_id}" for row in default_universe.itertuples(index=False)],
@@ -156,6 +187,20 @@ def build_playbook_scheduler_policy(data: Mapping[str, Any]) -> dict[str, Any]:
             "excluded_rare_module_ids": rare.get("module_id", pd.Series(dtype=object)).astype(str).tolist(),
             "excluded_quarantined_module_count": int(len(quarantined)),
             "excluded_quarantined_module_ids": quarantined.get("module_id", pd.Series(dtype=object)).astype(str).tolist(),
+        },
+        "current_default_admission_universe": {
+            "description": "Modules satisfying runtime activation, regular-practice, standalone tradability, official gate, and incremental-contribution requirements.",
+            "module_count": int(len(admitted_universe)),
+            "module_ids": admitted_universe.get("module_id", pd.Series(dtype=object)).astype(str).tolist(),
+            "signal_keys": [f"{row.phase}::{row.candidate_id}" for row in admitted_universe.itertuples(index=False)],
+            "fail_closed_when_activation_binding_missing": True,
+        },
+        "historical_replay_semantics": {
+            "historical_module_ids_preserved": True,
+            "used_for_reproducible_target_d_and_baseline_b_replay": True,
+            "implies_current_default_admission": False,
+            "implies_tradability": False,
+            "implies_paper_trading_approval": False,
         },
         "causality_quarantine_summary": {
             "quarantined_module_count": int(len(quarantined)),
@@ -211,6 +256,7 @@ def build_playbook_scheduler_f_artifacts(project_root: Path) -> dict[str, Any]:
     policy = build_playbook_scheduler_policy(data)
     rare_modules = rare_modules_from_registry(data["playbook_module_registry"])
     default_universe = default_scheduler_universe(data["playbook_module_registry"])
+    admitted_universe = default_admission_universe(data["playbook_module_registry"])
     recommendation = deepcopy(SCHEDULER_F_RECOMMENDATION)
     report = render_scheduler_policy_report(policy=policy, recommendation=recommendation)
     result_row = pd.DataFrame([
@@ -219,6 +265,7 @@ def build_playbook_scheduler_f_artifacts(project_root: Path) -> dict[str, Any]:
             "default_include_rare_modules_in_scheduler": False,
             "rare_modules_allowed_in_explicit_audits": True,
             "default_scheduler_module_count": policy["recommended_default_scheduler_universe"]["module_count"],
+            "current_default_admitted_module_count": int(len(admitted_universe)),
             "excluded_rare_module_count": policy["recommended_default_scheduler_universe"]["excluded_rare_module_count"],
             "phase16a_rare_module_count": policy["rare_module_registry_summary"]["phase16a_rare_module_count"],
             "official_gates_changed": False,
@@ -236,6 +283,7 @@ def build_playbook_scheduler_f_artifacts(project_root: Path) -> dict[str, Any]:
         "result_row": result_row,
         "rare_modules": rare_modules,
         "default_scheduler_universe": default_universe,
+        "default_admission_universe": admitted_universe,
     }
 
 
@@ -263,7 +311,11 @@ def render_scheduler_policy_report(*, policy: Mapping[str, Any], recommendation:
         "- rare_modules_allowed_in_explicit_audits: `true`",
         "- rare_module_default_scheduler_status: `registry_only_excluded_from_default_scheduler`",
         f"- default_scheduler_module_count: `{universe['module_count']}`",
+        f"- current_default_admitted_module_count: `{policy['current_default_admission_universe']['module_count']}`",
         f"- excluded_rare_module_count: `{universe['excluded_rare_module_count']}`",
+        "- The compatibility universe is historical research replay only; it does not imply current admission or tradability.",
+        "- no_trade_is_valid: `true`",
+        "- minimum_trades_per_day: `null`",
         "",
         "## Rare module registry summary",
         "",

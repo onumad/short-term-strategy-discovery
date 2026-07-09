@@ -13,6 +13,7 @@ if str(SRC_ROOT) not in sys.path:
 from short_term_edge.playbook_scheduler_policy import (  # noqa: E402
     build_playbook_scheduler_f_artifacts,
     build_playbook_scheduler_policy,
+    default_admission_universe,
     default_scheduler_universe,
     load_playbook_scheduler_policy_inputs,
     rare_low_activity_scheduler_mapping,
@@ -57,6 +58,27 @@ class PlaybookSchedulerPolicyTests(unittest.TestCase):
         self.assertEqual(
             self.policy["rare_module_default_scheduler_status"],
             "registry_only_excluded_from_default_scheduler",
+        )
+
+    def test_historical_replay_is_separate_from_current_default_admission(self) -> None:
+        registry = self.data["playbook_module_registry"]
+        historical = default_scheduler_universe(registry)
+        admitted = default_admission_universe(registry)
+        self.assertEqual(len(historical), 16)
+        self.assertTrue(admitted.empty)
+        self.assertEqual(
+            self.policy["recommended_default_scheduler_universe"]["semantic_status"],
+            "historical_research_replay_universe_not_current_default_admission",
+        )
+        self.assertEqual(self.policy["current_default_admission_universe"]["module_count"], 0)
+
+    def test_conditional_scheduler_allows_no_trade_without_daily_target(self) -> None:
+        self.assertTrue(self.policy["no_trade_is_valid"])
+        self.assertIsNone(self.policy["minimum_trades_per_day"])
+        self.assertFalse(self.policy["forced_daily_activity"])
+        self.assertEqual(
+            set(self.policy["eligibility_layers"]),
+            {"condition_eligible", "research_eligible", "default_scheduler_admitted"},
         )
 
     def test_rare_modules_allowed_in_explicit_rare_or_diversifier_audits(self) -> None:
