@@ -86,7 +86,7 @@ For data loading or audit-assumption changes, also run:
 - Timezone: `America/New_York`
 - Session rule: under the current implementation, bars at or after `18:00 ET` map to the next local calendar date; this is not an exchange-calendar calculation
 - RTH: `[09:30,16:00) ET`; a bar starting at `16:00 ET` is not RTH
-- Current active work: calibrate and validate coverage-aligned ML Baseline B under versioned research-release contracts; deterministic playbook research continues, and no model is approved as a signal input or for paper trading.
+- Current ML state: coverage-aligned Baseline B is parked after failing Calibration/Drift/Policy Audit A; existing holdouts are consumed exploratory evidence, and no model is approved as a signal input or for paper trading.
 
 ## Current Playbook Direction
 
