@@ -8,6 +8,8 @@ while every run also gets a provenance-preserving artifact directory.
 from __future__ import annotations
 
 import json
+import hashlib
+import platform
 import re
 import subprocess
 from dataclasses import dataclass
@@ -16,6 +18,10 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 import pandas as pd
+
+
+MANIFEST_SCHEMA_VERSION = "research_run_manifest/v2"
+AUTHORIZATION_STAGES = {"research", "paper", "shadow", "controlled_live"}
 
 
 @dataclass(frozen=True)
@@ -58,9 +64,33 @@ def write_experiment_manifest(
     legacy_artifacts: Mapping[str, Path] | None = None,
     guardrails: Sequence[str] = (),
     data_files: Sequence[Path] = (),
+    release_id: str | None = None,
+    authorization_stage: str = "research",
+    schema_versions: Mapping[str, str] | None = None,
+    source_versions: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     """Write a deterministic JSON manifest describing one research run."""
+    if authorization_stage not in AUTHORIZATION_STAGES:
+        raise ValueError(f"unknown authorization_stage: {authorization_stage}")
+    if authorization_stage != "research":
+        raise ValueError("research experiment manifests cannot promote authorization_stage")
+    git_state = _git_state(project_root)
+    artifact_paths = {
+        "results": paths.results_path,
+        "specs": paths.specs_path,
+        "report": paths.report_path,
+        "manifest": paths.manifest_path,
+    }
     manifest = {
+        "schema_version": MANIFEST_SCHEMA_VERSION,
+        "release_id": release_id or f"{paths.experiment_name}:{paths.run_id}",
+        "authorization_stage": authorization_stage,
+        "approval_state": {
+            "approved_as_signal_input": False,
+            "paper_trading_approved": False,
+            "shadow_execution_approved": False,
+            "live_trading_approved": False,
+        },
         "experiment": experiment_name,
         "run_id": paths.run_id,
         "generated_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
@@ -70,16 +100,31 @@ def write_experiment_manifest(
         "result_row_count": int(len(results)),
         "label_counts": _counts(results, _label_column(results)),
         "family_counts": _counts(results, "family"),
-        "artifacts": {
-            "results": _relative(project_root, paths.results_path),
-            "specs": _relative(project_root, paths.specs_path),
-            "report": _relative(project_root, paths.report_path),
-            "manifest": _relative(project_root, paths.manifest_path),
-        },
+        "artifacts": {name: _relative(project_root, path) for name, path in artifact_paths.items()},
         "legacy_artifacts": {name: _relative(project_root, path) for name, path in (legacy_artifacts or {}).items()},
         "data_files": [_relative(project_root, path) for path in data_files],
+        "input_artifacts": [_artifact_record(project_root, path) for path in data_files],
+        "output_artifacts": {
+            name: _artifact_record(project_root, path)
+            for name, path in artifact_paths.items()
+            if name != "manifest"
+        },
+        "legacy_output_artifacts": {
+            name: _artifact_record(project_root, path) for name, path in (legacy_artifacts or {}).items()
+        },
+        "schema_versions": dict(schema_versions or {}),
+        "source_versions": dict(source_versions or {}),
+        "runtime": {
+            "python": platform.python_version(),
+            "pandas": pd.__version__,
+        },
         "guardrails": list(guardrails),
-        "git": _git_state(project_root),
+        "git": git_state,
+        "provenance": {
+            "source_revision": _git_output(project_root, "rev-parse", "HEAD"),
+            "dirty_worktree": bool(git_state.get("status_short")),
+            "content_hash_algorithm": "sha256",
+        },
     }
     paths.manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
     return manifest
@@ -129,6 +174,24 @@ def _relative(project_root: Path, path: Path) -> str:
         return resolved_path.relative_to(resolved_root).as_posix()
     except ValueError:
         return resolved_path.as_posix()
+
+
+def content_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _artifact_record(project_root: Path, path: Path) -> dict[str, Any]:
+    exists = path.is_file()
+    return {
+        "path": _relative(project_root, path),
+        "exists": exists,
+        "size_bytes": int(path.stat().st_size) if exists else None,
+        "sha256": content_sha256(path) if exists else None,
+    }
 
 
 def _jsonable(value: Any) -> Any:

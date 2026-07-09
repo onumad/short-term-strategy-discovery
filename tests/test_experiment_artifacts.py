@@ -13,7 +13,13 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from short_term_edge.experiments.artifacts import list_local_data_files, prepare_experiment_run, write_experiment_manifest
+from short_term_edge.experiments.artifacts import (
+    MANIFEST_SCHEMA_VERSION,
+    content_sha256,
+    list_local_data_files,
+    prepare_experiment_run,
+    write_experiment_manifest,
+)
 
 
 class ExperimentArtifactsTests(unittest.TestCase):
@@ -56,9 +62,15 @@ class ExperimentArtifactsTests(unittest.TestCase):
                 data_files=[data_file],
             )
             saved = json.loads(paths.manifest_path.read_text(encoding="utf-8"))
+            expected_data_hash = content_sha256(data_file)
+            expected_data_size = data_file.stat().st_size
 
         self.assertEqual(manifest, saved)
         self.assertEqual(saved["experiment"], "phase8a_mgc_clean_family")
+        self.assertEqual(saved["schema_version"], MANIFEST_SCHEMA_VERSION)
+        self.assertEqual(saved["authorization_stage"], "research")
+        self.assertFalse(saved["approval_state"]["approved_as_signal_input"])
+        self.assertFalse(saved["approval_state"]["paper_trading_approved"])
         self.assertEqual(saved["run_id"], "2026-07-06_120000")
         self.assertEqual(saved["selected_specs_count"], 12)
         self.assertEqual(saved["result_row_count"], 2)
@@ -67,6 +79,10 @@ class ExperimentArtifactsTests(unittest.TestCase):
         self.assertEqual(saved["artifacts"]["results"], "artifacts/phase8a_mgc_clean_family/2026-07-06_120000/results.csv")
         self.assertEqual(saved["legacy_artifacts"]["results"], "outputs/phase8a_mgc_clean_family_results.csv")
         self.assertEqual(saved["data_files"], ["data/raw/MGC_1m.csv"])
+        self.assertEqual(saved["input_artifacts"][0]["sha256"], expected_data_hash)
+        self.assertEqual(saved["input_artifacts"][0]["size_bytes"], expected_data_size)
+        self.assertEqual(saved["provenance"]["content_hash_algorithm"], "sha256")
+        self.assertIn("python", saved["runtime"])
         self.assertIn("research/simulation only", saved["guardrails"])
         self.assertIn("git", saved)
 
@@ -93,6 +109,22 @@ class ExperimentArtifactsTests(unittest.TestCase):
             )
 
         self.assertEqual(manifest["label_counts"], {"concentrated": 2, "rejected_timing_cost": 1})
+
+    def test_manifest_rejects_research_stage_promotion(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="hermes-experiment-artifacts-") as tmp:
+            root = Path(tmp)
+            paths = prepare_experiment_run(root, "unit", run_id="unit")
+            with self.assertRaisesRegex(ValueError, "cannot promote"):
+                write_experiment_manifest(
+                    project_root=root,
+                    paths=paths,
+                    experiment_name="unit",
+                    command="unit",
+                    config={},
+                    selected_specs_count=0,
+                    results=pd.DataFrame(),
+                    authorization_stage="paper",
+                )
 
     def test_list_local_data_files_can_filter_by_symbol(self) -> None:
         with tempfile.TemporaryDirectory(prefix="hermes-experiment-artifacts-") as tmp:
