@@ -45,6 +45,7 @@ RELEASE_MANIFESTS = (
 )
 LINT_PATHS = (
     "src/short_term_edge/release_verification.py",
+    "scripts/run_project_python.py",
     "scripts/verify_project.py",
     "tests/test_release_verification.py",
 )
@@ -122,7 +123,8 @@ def _check_tracked_json(root: Path, failures: list[str]) -> None:
 
 
 def _check_private_keys(root: Path, failures: list[str]) -> None:
-    marker = "-----BEGIN "
+    marker = "-" * 5 + "BEGIN "
+    suffix = "PRIVATE " + "KEY" + "-" * 5
     for path in _tracked_files(root):
         if path.suffix.lower() in {".png", ".jpg", ".jpeg", ".gif", ".pdf", ".parquet"}:
             continue
@@ -130,7 +132,7 @@ def _check_private_keys(root: Path, failures: list[str]) -> None:
             text = path.read_text(encoding="utf-8")
         except (OSError, UnicodeError):
             continue
-        if marker in text and "PRIVATE KEY-----" in text:
+        if marker in text and suffix in text:
             failures.append(f"possible private key in tracked file {path.relative_to(root)}")
 
 

@@ -1,0 +1,18 @@
+minimum_pre_commit_version: "4.6.0"
+default_language_version:
+  python: python3.11
+
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: Ruff
+        entry: python scripts/run_project_python.py -m ruff check
+        language: system
+        types: [python]
+        files: ^(src/short_term_edge/release_verification\.py|scripts/run_project_python\.py|scripts/verify_project\.py|tests/test_release_verification\.py)$
+      - id: project-quick-verification
+        name: Project quick verification
+        entry: python scripts/run_project_python.py scripts/verify_project.py --profile quick
+        language: system
+        pass_filenames: false
