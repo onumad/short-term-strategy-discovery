@@ -43,6 +43,7 @@ CORE_LOCKED_PACKAGES = {
 RELEASE_MANIFESTS = (
     Path("artifacts/ml_baseline_b_coverage_classifier/ml-baseline-b-r2-frozen/manifest.json"),
     Path("artifacts/framework_g_research_release/framework-g-r2-foundation/manifest.json"),
+    Path("artifacts/ml_calibration_drift_policy_audit_a/ml-calibration-drift-policy-audit-a-r1/manifest.json"),
 )
 LINT_PATHS = (
     "src/short_term_edge/release_verification.py",
