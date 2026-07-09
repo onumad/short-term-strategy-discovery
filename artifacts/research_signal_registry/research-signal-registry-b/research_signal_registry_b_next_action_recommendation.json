@@ -1,6 +1,0 @@
-{
-  "next_action": "portfolio_audit_b_with_phase13a_uncorrelated_modules",
-  "rationale": "Phase 13A added positive uncorrelated prior-RTH breakout modules to the playbook registry; test whether they improve combined playbook stability.",
-  "official_gates_changed": false,
-  "paper_trading_approved": false
-}

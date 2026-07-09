@@ -1,4 +1,0 @@
-portfolio_mode,active_days_delta,fold_delta,best_day_concentration_delta,best_trade_concentration_delta,drawdown_delta,correlation_delta,phase16a_net_contribution,phase16a_trade_count,phase16a_active_days,phase16a_overlap_skipped,phase16a_session_skipped,phase16a_days_existing_no_trade,phase16a_days_existing_negative_pnl,playbook_level_contribution_status
-raw_sum_diagnostic,1,0.0,0.001177,-0.013681,-505.15,0.031518,1109.06,87,30,0,0,1,12,improves_activity
-one_trade_at_a_time_chronological,1,0.0,0.019529,-0.002912,-252.45,0.031518,106.97,36,30,143,0,1,12,improves_activity
-max_one_trade_per_session,1,0.0,0.000442,0.000442,-54.81,0.031518,98.47,3,3,0,434,1,1,improves_activity

@@ -1,3 +1,0 @@
-cohort,day_count,average_rth_range,average_close_position,trend_day_frequency,reversal_day_frequency,range_day_frequency,high_vol_frequency,low_vol_frequency,power_hour_expansion_frequency,lunch_compression_frequency,lunch_expansion_frequency,prior_level_interaction_frequency,no_trade_frequency,module_overlap_frequency
-weak_fold_days,248,346.350806,0.57401,0.419355,0.112903,0.104839,0.516129,0.145161,0.298387,0.004032,0.620968,0.915323,0.0,0.991935
-non_weak_fold_days,0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0

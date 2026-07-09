@@ -1,5 +1,0 @@
-fold_view,folds,total_trades,total_active_days,total_net_pnl,total_stress_pnl,positive_folds
-existing_project_folds,288,400,400,-10486.18,-10886.18,38
-half_year_folds,96,608,608,-13848.13,-14456.13,18
-quarterly_folds,192,608,608,-13848.13,-14456.13,49
-rolling_6_month_test_folds,144,910,910,-17626.96,-18536.96,30

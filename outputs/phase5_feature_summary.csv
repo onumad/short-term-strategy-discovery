@@ -1,3 +1,0 @@
-symbol,rows,sessions,first_timestamp,last_timestamp,feature_columns
-MGC,24299,63,2026-04-06 09:30:00-04:00,2026-07-02 15:59:00-04:00,"bar_index,session_vwap,ema9,ema20,sma20,realized_range_20m,prior_session_high,prior_session_low,prior_session_close,or_high_15m,or_low_15m,label_forward_close_5m,label_forward_return_5m"
-MNQ,24210,63,2026-04-06 09:30:00-04:00,2026-07-02 15:59:00-04:00,"bar_index,session_vwap,ema9,ema20,sma20,realized_range_20m,prior_session_high,prior_session_low,prior_session_close,or_high_15m,or_low_15m,label_forward_close_5m,label_forward_return_5m"

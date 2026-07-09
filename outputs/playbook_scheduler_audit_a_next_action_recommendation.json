@@ -1,8 +1,0 @@
-{
-  "diagnostic_only_no_signals_generated": true,
-  "live_trading_approved": false,
-  "next_action": "playbook_scheduler_b_priority_retest",
-  "official_gates_changed": false,
-  "paper_trading_approved": false,
-  "rationale": "At least one diagnostic priority change improved fold stability or concentration versus the Portfolio Audit D scheduler baseline."
-}

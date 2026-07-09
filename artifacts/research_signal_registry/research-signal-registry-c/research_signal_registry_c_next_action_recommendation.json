@@ -1,6 +1,0 @@
-{
-  "next_action": "portfolio_audit_c_with_phase14a_prior_level_modules",
-  "rationale": "Phase 14A added positive uncorrelated prior-RTH midpoint reaction modules to the playbook registry; test whether they improve combined playbook stability.",
-  "official_gates_changed": false,
-  "paper_trading_approved": false
-}

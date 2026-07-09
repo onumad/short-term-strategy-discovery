@@ -1,3 +1,0 @@
-group,trades,gross_pnl,net_pnl,stress_pnl,avg_mfe,avg_mae
-structure_target_time_exit,304,-6000.34,-6833.3,-7137.3,86.40131578947368,98.4720394736842
-hard_stop_time_exit,304,-6181.87,-7014.83,-7318.83,94.7154605263158,100.35690789473684

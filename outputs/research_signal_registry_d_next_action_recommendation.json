@@ -1,6 +1,0 @@
-{
-  "next_action": "portfolio_audit_d_with_phase15a_trend_power_modules",
-  "rationale": "Phase 15A added positive uncorrelated trend/power continuation modules to the playbook registry; test whether they improve combined playbook stability despite limited target-gap coverage.",
-  "official_gates_changed": false,
-  "paper_trading_approved": false
-}

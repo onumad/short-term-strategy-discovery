@@ -1,9 +1,0 @@
-gap_type,day_count,evidence
-prior_level_interaction_not_covered_by_phase13a,673,prior RTH level touched but Phase 13A did not cover
-trend_days_with_no_module,321,trend proxy and no selected module coverage
-power_hour_expansion_days_with_no_module,274,power-hour expansion and no coverage
-low_volatility_expansion_days_with_no_module,196,low daily range with intraday expansion and no coverage
-overlap_heavy_days,147,negative days where diversifier hurt/overlapped
-range_days_with_no_module,96,range proxy and no selected module coverage
-weak_folds_after_phase13a,41,weak folds where Phase 13A contributed
-high_volatility_reversal_days_with_no_module,0,"high range, range close, no coverage"

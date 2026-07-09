@@ -1,9 +1,0 @@
-{
-  "candidate_remedy_count": 3,
-  "diagnostic_only_no_signals_generated": true,
-  "live_trading_approved": false,
-  "next_action": "phase16a_targeted_regime_module_scout",
-  "official_gates_changed": false,
-  "paper_trading_approved": false,
-  "rationale": "Weak folds cluster around identifiable market-regime feature differences."
-}

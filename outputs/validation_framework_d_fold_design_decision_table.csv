@@ -1,6 +1,0 @@
-fold_view,role,required_in_future_reports,diagnostic_companion_only,official_promotion_gate,adequacy_warning_required,reporting_rule
-existing_project_folds,continuity_primary_reported_view,True,False,False,False,Retained for continuity with prior research and still reported.
-half_year_folds,diagnostic_companion_less_coarse_view,True,True,False,False,Diagnostic companion fold view; Audit C showed it may be less coarse than existing folds.
-quarterly_folds,diagnostic_stress_view,True,True,False,True,"Diagnostic stress view. It may be too sparse for rare modules, so adequacy warnings are required."
-rolling_3_month_test_folds,excluded_from_standard_required_views,False,True,False,True,Do not make rolling 3-month folds official promotion gates; use only if explicitly requested as extra diagnostics.
-rolling_6_month_test_folds,diagnostic_regime_sensitivity_view,True,True,False,False,Diagnostic regime-sensitivity view; not an official promotion gate.
