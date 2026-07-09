@@ -1,14 +1,26 @@
 # Short-Term Futures Edge Discovery
 
-Research workspace for building a diversified playbook of specialized deterministic MNQ intraday modules from local OHLCV data.
+Project for developing a production-grade hybrid ML/LLM automated intraday futures trading bot built from a diversified playbook of deterministic, independently validated modules.
+
+## Project Goal
+
+The intended end product is an auditable trading bot that uses validated ML models and bounded LLM analysis to evaluate market conditions and select from a deterministic playbook, while independent policy and risk controls retain final authority over execution. Development is deliberately staged:
+
+1. **Research and simulation (current):** discover modules, remove lookahead, validate costs and slippage, and test playbook behavior across chronological out-of-sample periods.
+2. **Paper trading:** run frozen strategy and risk configurations against live market data using simulated orders and fills.
+3. **Shadow execution:** exercise the production order lifecycle and reconciliation path with order transmission disabled and no market exposure.
+4. **Controlled live execution:** enable broker routing only after an explicit policy change, operational safeguards, and a limited-size rollout plan are approved.
+
+Passing a research gate does not automatically promote the project to the next stage. Each stage requires an explicit policy decision. ML models may provide versioned scores and signal inputs, and LLMs may provide versioned structured analysis and proposals, but neither may bypass deterministic policy, independent risk validation, or execution controls.
 
 ## Guardrails
 
-- Research and simulation only.
-- No live trading approval.
-- No broker adapters, order routing, API-key storage, webhooks, or automated execution.
-- No LLM-driven trade entries, exits, sizing, or discretionary decisions.
-- Treat strategy results as paper-trading candidates at most until independently validated.
+- The current stage is research and simulation only.
+- No paper or live trading is currently approved.
+- Broker adapters, order routing, API-key storage, webhooks, and automated execution remain out of scope until an explicit stage promotion.
+- ML and LLM components may not directly authorize orders, sizing, risk overrides, or broker actions.
+- Model processes must not hold broker credentials or direct order-routing capability.
+- Candidate and watchlist labels are research language only and do not authorize paper trading.
 
 ## Environment
 
@@ -35,7 +47,7 @@ Run the full test suite before reporting code changes as complete:
 For data loading or audit-assumption changes, also run:
 
 ```bash
-./.venv/Scripts/python.exe scripts/audit_data.py
+./.venv/Scripts/python.exe scripts/audit_data.py --no-write
 ```
 
 ## Current Research Scope
@@ -44,9 +56,9 @@ For data loading or audit-assumption changes, also run:
 - Data source: local CSV files under `data/raw`
 - Required schema: `timestamp,symbol,open,high,low,close,volume`
 - Timezone: `America/New_York`
-- Session rule: bars at or after `18:00 ET` map to the next CME trade date
-- RTH: `09:30-16:00 ET`
-- Current active work: Playbook Direction A shifted the project from single daily-strategy discovery to specialized intraday playbook research; no paper-trading approval.
+- Session rule: under the current implementation, bars at or after `18:00 ET` map to the next local calendar date; this is not an exchange-calendar calculation
+- RTH: `[09:30,16:00) ET`; a bar starting at `16:00 ET` is not RTH
+- Current active work: calibrate and validate coverage-aligned ML Baseline B under versioned research-release contracts; deterministic playbook research continues, and no model is approved as a signal input or for paper trading.
 
 ## Current Playbook Direction
 
@@ -70,7 +82,25 @@ The project is being refactored toward a reusable research runner:
 local bars -> feature library -> deterministic StrategySpec candidates -> checkpointed scoring -> reports/manifests
 ```
 
-The backtester/scoring code remains the source of truth. AI assistance may propose or rank deterministic specs, but it must not directly generate live trade decisions.
+The backtester/scoring code remains the research source of truth. The target production data flow is:
+
+```text
+market data -> point-in-time features -> deterministic modules + ML scores + LLM proposals
+            -> deterministic policy -> independent risk engine -> execution
+            -> reconciliation, monitoring, and immutable decision logs
+```
+
+- ML models produce calibrated, versioned predictions, rankings, and signal inputs.
+- LLMs produce schema-constrained, versioned analysis and proposals.
+- Deterministic policy resolves model outputs into an intended action.
+- An independent risk engine approves, reduces, or rejects that action and fails closed.
+- The execution process is isolated from model processes and owns broker credentials.
+
+The detailed authority boundaries and promotion requirements are defined in `docs/hybrid_ml_llm_trading_architecture.md`.
+
+Framework G extends the research runner with versioned release manifests, content hashes, explicit `authorization_stage=research`, strict ML prediction envelopes, abstention semantics, model-specific promotion gates, and a deterministic counterfactual policy-impact contract. These contracts record evidence and fail closed; they do not authorize execution or make model outputs authoritative.
+
+The future production path extends this research platform with frozen strategy releases, live-data ingestion, paper and shadow execution, deterministic portfolio risk controls, broker reconciliation, monitoring, and kill-switch behavior. Those components belong to later delivery stages and are not authorized by research results alone.
 
 ## Phase 8A Clean-Family Prefilter
 

@@ -2,7 +2,11 @@
 
 ## 1. New Objective
 
-Build a diversified playbook of specialized deterministic MNQ intraday setups. No individual setup must trade daily; the combined playbook must provide enough regular opportunities while preserving strict research-only validation.
+Build and validate the deterministic playbook that will anchor a production-grade hybrid ML/LLM automated intraday futures trading bot. No individual setup must trade daily; the combined playbook must provide enough regular opportunities while preserving strict research-only validation.
+
+The current authorization remains research and simulation only. Paper trading, shadow execution, and controlled live execution are later delivery stages that require explicit policy changes; research labels or gate results do not activate them automatically.
+
+ML research may produce versioned regime classifications, rankings, and signal inputs. LLM research may produce schema-constrained analysis and proposals. In later stages, deterministic policy and independent risk controls must validate every proposed action, and model processes must remain isolated from broker credentials and direct order routing.
 
 ## 2. Module-Level Evaluation
 
@@ -101,11 +105,12 @@ portfolio_role:
 
 ## 6. Guardrails
 
-- Research/simulation only.
-- No broker/live functionality.
-- No LLM-driven trade decisions.
-- No paper-trading approval unless official gates pass.
-- No loosening official gates.
+- Current stage: research and simulation only.
+- No broker or live-execution functionality during the current stage.
+- No model may directly authorize orders, sizing, risk overrides, or broker actions.
+- ML outputs and LLM proposals must be versioned, schema-validated where applicable, and evaluated without lookahead.
+- Passing official gates does not authorize paper trading; stage promotion requires an explicit project policy change.
+- No loosening official gates without an explicit project policy change.
 - No post-hoc date/session exclusions.
 - No weekday rescue filters unless structurally justified.
 - Deterministic, serializable rules only.
@@ -119,6 +124,12 @@ B. Classify signal evidence and tradability separately.
 C. Add promising module to research signal registry.
 D. Test contribution in portfolio/playbook audit.
 E. Only then consider targeted retest or review packet.
+F. Build point-in-time features and replay-derived labels with unknown coverage preserved as null.
+G. Train ML baselines only after target-readiness gates pass.
+H. Validate calibration, drift, abstention, and deterministic counterfactual playbook impact before approving a versioned score as a non-authoritative signal input.
+I. Evaluate bounded LLM tasks only under versioned schemas and outside the order-authority path.
+
+All research releases must record an explicit authorization stage, source revision, schema versions, input lineage or content hashes, and immutable identifiers. The default authorization stage is `research`; model and LLM releases default to not approved as signal inputs.
 
 ## Framework E rare-module policy note
 
