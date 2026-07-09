@@ -43,7 +43,7 @@ REQUIRED_INPUT_FILES = {
 
 def write_json(path: Path, payload: Mapping[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(_jsonable(payload), indent=2, sort_keys=False), encoding="utf-8")
+    path.write_text(json.dumps(_jsonable(payload), indent=2, sort_keys=True), encoding="utf-8")
 
 
 def load_playbook_scheduler_policy_inputs(project_root: Path) -> dict[str, Any]:

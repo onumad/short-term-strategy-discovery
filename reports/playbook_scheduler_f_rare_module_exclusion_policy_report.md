@@ -17,8 +17,12 @@ This is a policy/configuration artifact only. It generated no new signals, ran n
 - default_include_rare_modules_in_scheduler: `false`
 - rare_modules_allowed_in_explicit_audits: `true`
 - rare_module_default_scheduler_status: `registry_only_excluded_from_default_scheduler`
-- default_scheduler_module_count: `22`
+- default_scheduler_module_count: `16`
+- current_default_admitted_module_count: `0`
 - excluded_rare_module_count: `25`
+- The compatibility universe is historical research replay only; it does not imply current admission or tradability.
+- no_trade_is_valid: `true`
+- minimum_trades_per_day: `null`
 
 ## Rare module registry summary
 

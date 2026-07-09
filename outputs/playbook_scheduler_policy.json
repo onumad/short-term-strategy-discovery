@@ -8,7 +8,20 @@
     "quarantined_module_count": 6,
     "silent_definition_replacement": false
   },
+  "current_default_admission_universe": {
+    "description": "Modules satisfying runtime activation, regular-practice, standalone tradability, official gate, and incremental-contribution requirements.",
+    "fail_closed_when_activation_binding_missing": true,
+    "module_count": 0,
+    "module_ids": [],
+    "signal_keys": []
+  },
   "default_include_rare_modules_in_scheduler": false,
+  "eligibility_layers": [
+    "condition_eligible",
+    "research_eligible",
+    "default_scheduler_admitted"
+  ],
+  "forced_daily_activity": false,
   "future_audit_requirements": {
     "do_not_map_low_activity_to_no_signal": true,
     "more_evidence_required_before_default_scheduler_inclusion": true,
@@ -16,6 +29,13 @@
     "separate_signal_evidence_from_tradability": true,
     "verify_no_live_trading_or_paper_approval": true,
     "verify_phase16a_rare_modules_remain_registered": true
+  },
+  "historical_replay_semantics": {
+    "historical_module_ids_preserved": true,
+    "implies_current_default_admission": false,
+    "implies_paper_trading_approval": false,
+    "implies_tradability": false,
+    "used_for_reproducible_target_d_and_baseline_b_replay": true
   },
   "input_guardrail_summary": {
     "portfolio_audit_rules_allow_rare_diversifier_candidates": true,
@@ -27,7 +47,9 @@
   "live_trading_approved": false,
   "low_activity_blocks_tradability": true,
   "low_activity_does_not_erase_signal_evidence": true,
+  "minimum_trades_per_day": null,
   "new_strategy_signals_generated": false,
+  "no_trade_is_valid": true,
   "official_gates_changed": false,
   "paper_trading_approved": false,
   "phase16a_rare_modules_not_deleted": true,
@@ -57,7 +79,7 @@
   },
   "rare_modules_allowed_in_explicit_audits": true,
   "recommended_default_scheduler_universe": {
-    "description": "Default active scheduler universe excludes rare_setup_research_signal / rare_setup_module rows until more evidence is available.",
+    "description": "Compatibility identifier for the historical research replay universe; not current default admission under Framework H.",
     "excluded_quarantined_module_count": 6,
     "excluded_quarantined_module_ids": [
       "MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_exclude_narrowest_20_all_gaps_all_touches_mt1",
@@ -114,6 +136,7 @@
       "MNQ_14a_prior_rth_close_rejection_from_level_long_two_bar_confirm_fill_next_open_structure_target_time_exit",
       "MNQ_14a_prior_rth_midpoint_rejection_from_level_short_close_confirm_fill_next_open_structure_target_time_exit"
     ],
+    "semantic_status": "historical_research_replay_universe_not_current_default_admission",
     "signal_keys": [
       "phase10b::MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_all_ranges_all_gaps_all_touches_mt1",
       "phase10b::MNQ_10b_primary_short_midday_breakout_overnight_range_breakout_short_tf15_midday_response_all_ranges_all_gaps_all_touches_mt2",
@@ -135,6 +158,7 @@
   },
   "registry_mutation": false,
   "research_only_guardrail": "Research/simulation only. No live trading, broker adapters, order routing, webhooks, credential storage, automated execution, or LLM-driven trade decisions.",
+  "scheduler_semantics_version": "conditional_specialist_scheduler/v1",
   "source_scheduler_e_next_action": "park_rare_modules_in_registry_but_exclude_from_scheduler",
   "source_scheduler_e_rationale": "Rare modules helped activity but consistently carried overlap/drawdown diagnostic costs.",
   "strategy_searches_run": false
