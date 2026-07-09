@@ -10,7 +10,7 @@ repos:
         entry: python scripts/run_project_python.py -m ruff check
         language: system
         types: [python]
-        files: ^(src/short_term_edge/(release_verification|ml_calibration_drift_policy_audit_a)\.py|scripts/(run_project_python|run_ml_calibration_drift_policy_audit_a|verify_project)\.py|tests/test_(release_verification|ml_calibration_drift_policy_audit_a)\.py)$
+        files: ^(src/short_term_edge/(release_verification|ml_calibration_drift_policy_audit_a|conditional_specialist_framework_h)\.py|scripts/(run_project_python|run_ml_calibration_drift_policy_audit_a|build_conditional_specialist_framework_h|verify_project)\.py|tests/test_(release_verification|ml_calibration_drift_policy_audit_a|conditional_specialist_framework_h)\.py)$
       - id: project-quick-verification
         name: Project quick verification
         entry: python scripts/run_project_python.py scripts/verify_project.py --profile quick

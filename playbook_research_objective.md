@@ -40,6 +40,10 @@ The combined playbook should be evaluated on:
 
 The playbook, not every individual module, is responsible for regular opportunity.
 
+Opportunity is conditional, not compulsory. Every specialist must have a versioned point-in-time activation contract describing when it may evaluate a setup and when it must remain inactive. A day with no active specialist condition is a valid no-trade day; the framework has no minimum-trades-per-day target.
+
+Framework H separates condition eligibility, research eligibility, and default-scheduler admission. Historical replay membership preserves reproducibility but does not imply current admission, tradability, or stage approval.
+
 ## 4. Two-Tier Labels
 
 Preserve the registry distinction between signal evidence and tradability/practice readiness.

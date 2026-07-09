@@ -18,7 +18,7 @@ Advancing stages requires an explicit project policy change and stage-specific a
 ## System Architecture
 
 - **Point-in-time data and features:** provide validated, timestamped inputs with explicit freshness and missing-data states.
-- **Deterministic playbook:** defines versioned strategy modules and their eligible market conditions.
+- **Deterministic playbook:** defines versioned strategy modules and point-in-time activation contracts for their eligible market conditions. Condition eligibility, research eligibility, and default-scheduler admission are separate states; no-trade is valid when no admitted specialist is active.
 - **ML layer:** produces versioned, calibrated predictions, rankings, and signal inputs; training and promotion remain offline and reproducible.
 - **LLM layer:** produces schema-constrained analysis and proposals with versioned prompts, models, context, and outputs.
 - **Policy engine:** deterministically combines playbook state, ML outputs, and permitted LLM proposals into an intended action.

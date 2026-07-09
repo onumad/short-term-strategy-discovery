@@ -23,6 +23,7 @@ from short_term_edge.release_verification import verify_research_manifest  # noq
 
 QUICK_TESTS = (
     "tests.test_experiment_artifacts",
+    "tests.test_conditional_specialist_framework_h",
     "tests.test_features",
     "tests.test_framework_g_policy_contracts",
     "tests.test_framework_g_research_release",
@@ -44,14 +45,19 @@ RELEASE_MANIFESTS = (
     Path("artifacts/ml_baseline_b_coverage_classifier/ml-baseline-b-r2-frozen/manifest.json"),
     Path("artifacts/framework_g_research_release/framework-g-r2-foundation/manifest.json"),
     Path("artifacts/ml_calibration_drift_policy_audit_a/ml-calibration-drift-policy-audit-a-r1/manifest.json"),
+    Path("artifacts/playbook_scheduler_f/playbook-scheduler-f-r2-conditional-semantics/manifest.json"),
+    Path("artifacts/conditional_specialist_framework_h/conditional-specialist-framework-h-r1/manifest.json"),
 )
 LINT_PATHS = (
+    "src/short_term_edge/conditional_specialist_framework_h.py",
     "src/short_term_edge/release_verification.py",
     "scripts/run_project_python.py",
+    "scripts/build_conditional_specialist_framework_h.py",
     "scripts/run_ml_calibration_drift_policy_audit_a.py",
     "scripts/verify_project.py",
     "src/short_term_edge/ml_calibration_drift_policy_audit_a.py",
     "tests/test_ml_calibration_drift_policy_audit_a.py",
+    "tests/test_conditional_specialist_framework_h.py",
     "tests/test_release_verification.py",
 )
 

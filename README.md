@@ -93,6 +93,9 @@ For data loading or audit-assumption changes, also run:
 - Project direction shifted to specialized deterministic intraday playbook discovery.
 - Individual modules may be rare and do not need to trade daily.
 - The combined playbook is responsible for regular opportunity, diversification, concentration reduction, and fold stability.
+- Each specialist has a versioned point-in-time activation contract and remains inactive outside its condition.
+- Condition eligibility, research eligibility, and default-scheduler admission are distinct; historical replay membership is not admission.
+- No trade is a valid outcome when no admitted specialist is active; there is no minimum-trades-per-day target.
 - Official promotion gates remain unchanged.
 - No paper trading is approved.
 

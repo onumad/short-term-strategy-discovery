@@ -39,10 +39,10 @@ def main() -> None:
 
     objective_path = PROJECT_ROOT / "playbook_research_objective.md"
     if objective_path.exists():
-        objective_path.write_text(
-            append_scheduler_f_objective_note(objective_path.read_text(encoding="utf-8")),
-            encoding="utf-8",
-        )
+        existing_objective = objective_path.read_text(encoding="utf-8")
+        updated_objective = append_scheduler_f_objective_note(existing_objective)
+        if updated_objective != existing_objective:
+            objective_path.write_text(updated_objective, encoding="utf-8")
 
     run_id = os.environ.get("EXPERIMENT_RUN_ID", RUN_ID)
     paths = prepare_experiment_run(PROJECT_ROOT, EXPERIMENT_NAME, run_id)
