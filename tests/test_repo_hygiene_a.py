@@ -13,6 +13,10 @@ EXPECTED_REQUIREMENTS = [
     "pyarrow>=15",
     "joblib>=1.4",
     "tqdm>=4.66",
+    "scikit-learn>=1.9",
+    "scipy>=1.17",
+    "pandera[pandas]>=0.32",
+    "duckdb>=1.5",
 ]
 
 GENERATED_ARTIFACT_FOLDERS = [
@@ -41,7 +45,7 @@ class RepoHygieneATests(unittest.TestCase):
         for line in lines:
             self.assertNotIn(" ", line)
             self.assertNotIn("\t", line)
-            self.assertRegex(line, r"^[A-Za-z0-9_.-]+[<>=!~].+")
+            self.assertRegex(line, r"^[A-Za-z0-9_.-]+(?:\[[A-Za-z0-9_,.-]+\])?[<>=!~].+")
 
     def test_gitignore_has_required_sections(self) -> None:
         lines = _non_empty_lines(PROJECT_ROOT / ".gitignore")
