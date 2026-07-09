@@ -18,6 +18,7 @@ from short_term_edge.conditional_specialist_framework_h import (  # noqa: E402
     build_activation_contracts,
     build_condition_coverage_matrix,
     build_hypothesis_ledger,
+    build_framework_recommendation,
     build_redundancy_audit,
     conditional_specialist_policy,
 )
@@ -70,6 +71,15 @@ class ConditionalSpecialistFrameworkHTests(unittest.TestCase):
         self.assertEqual(int(redundancy.iloc[0]["module_count"]), 2)
         self.assertTrue((ledger["parameter_variation_alone_may_reopen"] == False).all())  # noqa: E712
         self.assertTrue((ledger["paper_trading_approved"] == False).all())  # noqa: E712
+
+    def test_recommendation_does_not_rank_gaps_by_matrix_order(self) -> None:
+        registry = _registry()
+        contracts = build_activation_contracts(registry)
+        coverage = build_condition_coverage_matrix(contracts, {"market_condition": ["range_day", "trend_day"]})
+        recommendation = build_framework_recommendation(contracts, coverage, build_redundancy_audit(contracts), 16)
+        self.assertIsNone(recommendation["priority_gap"])
+        self.assertEqual(recommendation["historical_replay_module_count"], 16)
+        self.assertIn("evidence_backed", recommendation["priority_gap_selection_status"])
 
 
 def _registry() -> pd.DataFrame:

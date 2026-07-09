@@ -304,21 +304,25 @@ def build_hypothesis_ledger(registry: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_framework_recommendation(
-    contracts: pd.DataFrame, coverage: pd.DataFrame, redundancy: pd.DataFrame
+    contracts: pd.DataFrame,
+    coverage: pd.DataFrame,
+    redundancy: pd.DataFrame,
+    historical_replay_count: int = 0,
 ) -> dict[str, Any]:
     admitted = int(contracts["default_scheduler_admitted"].sum())
     uncovered = coverage[coverage["coverage_status"].eq("uncovered")]
-    top_gap = uncovered.iloc[0].to_dict() if not uncovered.empty else None
     return {
         "schema_version": "conditional_specialist_framework_h_recommendation/v1",
-        "next_action": "define_one_structurally_new_specialist_for_priority_coverage_gap",
-        "rationale": "No current module satisfies default-admission requirements; preserve historical replay while researching one preregistered complementary specialist at a time.",
+        "next_action": "obtain_preregistered_structural_specialist_brief_then_run_one_bounded_scout",
+        "rationale": "No current module satisfies default-admission requirements. Preserve historical replay, rank gaps from explicit evidence rather than matrix order, and research one preregistered complementary specialist at a time.",
         "registered_module_count": len(contracts),
         "default_admitted_module_count": admitted,
-        "historical_replay_only_module_count": len(contracts) - admitted,
+        "nonadmitted_registered_module_count": len(contracts) - admitted,
+        "historical_replay_module_count": int(historical_replay_count),
         "uncovered_condition_window_cells": len(uncovered),
         "redundancy_cluster_count": len(redundancy),
-        "priority_gap": top_gap,
+        "priority_gap": None,
+        "priority_gap_selection_status": "requires_evidence_backed_ranking_not_first_uncovered_matrix_cell",
         "no_trade_is_valid": True,
         "forced_daily_activity": False,
         "official_gates_changed": False,
@@ -407,7 +411,7 @@ def run_conditional_specialist_framework_h(config: ConditionalSpecialistFramewor
         }
     )
     schema_additions = build_registry_schema_additions(registry_schema)
-    recommendation = build_framework_recommendation(contracts, coverage, redundancy)
+    recommendation = build_framework_recommendation(contracts, coverage, redundancy, len(historical_replay))
     result_row = pd.DataFrame(
         [
             {
