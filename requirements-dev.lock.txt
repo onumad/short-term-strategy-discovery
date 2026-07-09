@@ -1,0 +1,15 @@
+-r requirements.lock.txt
+
+cfgv==3.5.0
+distlib==0.4.3
+filelock==3.29.7
+hypothesis==6.156.4
+identify==2.6.19
+nodeenv==1.10.0
+platformdirs==4.10.0
+pre-commit==4.6.0
+python-discovery==1.4.4
+pyyaml==6.0.3
+ruff==0.15.21
+sortedcontainers==2.4.0
+virtualenv==21.6.0
