@@ -97,8 +97,10 @@ class MlTargetDPlaybookLabelBackfillTests(unittest.TestCase):
     def test_rare_modules_are_not_in_default_scheduler_labels(self) -> None:
         policy, registry = _real_policy_registry()
         universe = audit_default_scheduler_universe(policy, registry)
-        self.assertEqual(universe["default_module_count"], 22)
+        self.assertEqual(universe["default_module_count"], 16)
         self.assertEqual(universe["rare_module_count_excluded"], 25)
+        self.assertEqual(universe["quarantined_module_count_excluded"], 6)
+        self.assertFalse(universe["quarantined_modules_default_scheduler_included"])
 
     def test_no_model_training_or_strategy_search_or_promotion(self) -> None:
         source = (PROJECT_ROOT / "src" / "short_term_edge" / "ml_target_d_playbook_label_backfill.py").read_text(encoding="utf-8").lower()
@@ -138,7 +140,7 @@ def _real_policy_registry() -> tuple[dict, pd.DataFrame]:
 
 
 def _universe() -> dict:
-    return {"default_signal_keys": ["phase11a::module"], "rare_signal_keys": [], "default_module_count": 1, "rare_module_count_excluded": 0, "rare_modules_default_scheduler_included": False}
+    return {"default_signal_keys": ["phase11a::module"], "rare_signal_keys": [], "default_module_count": 1, "rare_module_count_excluded": 0, "rare_modules_default_scheduler_included": False, "quarantined_signal_keys": [], "quarantined_module_count_excluded": 0, "quarantined_modules_default_scheduler_included": False}
 
 
 def _sample_inputs(n: int) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:

@@ -78,12 +78,19 @@ def rare_module_mask(registry: pd.DataFrame) -> pd.Series:
     )
 
 
+def quarantine_mask(registry: pd.DataFrame) -> pd.Series:
+    status = registry.get("causality_review_status", pd.Series(index=registry.index, dtype=object)).astype(str)
+    scheduler_eligible = registry.get("scheduler_eligible", pd.Series(True, index=registry.index, dtype=bool))
+    scheduler_eligible = scheduler_eligible.astype(str).str.strip().str.lower().isin({"true", "1", "yes"})
+    return status.eq("quarantined_noncausal_definition") | ~scheduler_eligible
+
+
 def rare_modules_from_registry(registry: pd.DataFrame) -> pd.DataFrame:
     return registry[rare_module_mask(registry)].copy().sort_values(["phase", "candidate_id"]).reset_index(drop=True)
 
 
 def default_scheduler_universe(registry: pd.DataFrame) -> pd.DataFrame:
-    universe = registry[~rare_module_mask(registry)].copy()
+    universe = registry[~rare_module_mask(registry) & ~quarantine_mask(registry)].copy()
     return universe.sort_values(["phase", "candidate_id"]).reset_index(drop=True)
 
 
@@ -115,6 +122,7 @@ def build_playbook_scheduler_policy(data: Mapping[str, Any]) -> dict[str, Any]:
     validate_guardrail_inputs(data)
     registry = data["playbook_module_registry"]
     rare = rare_modules_from_registry(registry)
+    quarantined = registry[quarantine_mask(registry)].copy().sort_values(["phase", "candidate_id"])
     default_universe = default_scheduler_universe(registry)
     scheduler_e = data["scheduler_e_recommendation"]
 
@@ -134,6 +142,7 @@ def build_playbook_scheduler_policy(data: Mapping[str, Any]) -> dict[str, Any]:
         "candidate_results_changed": False,
         "candidates_promoted": False,
         "registry_mutation": False,
+        "causality_quarantine_enforced": True,
         "phase16a_rare_modules_not_deleted": True,
         "phase16a_rare_modules_not_rejected_as_no_signal": True,
         "low_activity_does_not_erase_signal_evidence": True,
@@ -145,6 +154,18 @@ def build_playbook_scheduler_policy(data: Mapping[str, Any]) -> dict[str, Any]:
             "signal_keys": [f"{row.phase}::{row.candidate_id}" for row in default_universe.itertuples(index=False)],
             "excluded_rare_module_count": int(len(rare)),
             "excluded_rare_module_ids": rare.get("module_id", pd.Series(dtype=object)).astype(str).tolist(),
+            "excluded_quarantined_module_count": int(len(quarantined)),
+            "excluded_quarantined_module_ids": quarantined.get("module_id", pd.Series(dtype=object)).astype(str).tolist(),
+        },
+        "causality_quarantine_summary": {
+            "quarantined_module_count": int(len(quarantined)),
+            "all_quarantined_excluded_from_default_scheduler": not bool(
+                set(quarantined.get("module_id", pd.Series(dtype=object)).astype(str)).intersection(
+                    default_universe.get("module_id", pd.Series(dtype=object)).astype(str)
+                )
+            ),
+            "historical_module_ids_preserved": True,
+            "silent_definition_replacement": False,
         },
         "rare_module_exception_rules": {
             "allowed_contexts": [

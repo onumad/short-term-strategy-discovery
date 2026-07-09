@@ -1,0 +1,26 @@
+from __future__ import annotations
+
+import os
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = PROJECT_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from short_term_edge.module_registry_f_quarantine import build_module_registry_f_quarantine  # noqa: E402
+
+
+def main() -> None:
+    run_id = os.environ.get("EXPERIMENT_RUN_ID", "module-registry-f-r1")
+    result = build_module_registry_f_quarantine(PROJECT_ROOT, run_id)
+    recommendation = result["next_action_recommendation"]
+    print("Module Registry F quarantine complete.")
+    print(f"Quarantined modules: {recommendation['quarantined_module_count']}")
+    print(f"Default scheduler modules: {recommendation['default_scheduler_module_count']}")
+    print(f"Next action: {recommendation['next_action']}")
+
+
+if __name__ == "__main__":
+    main()

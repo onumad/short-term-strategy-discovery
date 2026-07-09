@@ -172,7 +172,7 @@ def validate_inputs(dataset: pd.DataFrame, labels: dict[str, Any], policy: dict[
         raise ValueError("Dataset C label dictionary is empty")
     if policy.get("default_include_rare_modules_in_scheduler") is not False:
         raise ValueError("Default scheduler policy must exclude rare modules")
-    for column in ("phase", "candidate_id", "research_track", "portfolio_role"):
+    for column in ("phase", "candidate_id", "research_track", "portfolio_role", "causality_review_status", "ml_backfill_eligible"):
         if column not in registry:
             raise ValueError(f"Module registry missing {column}")
 
@@ -182,19 +182,39 @@ def audit_default_scheduler_universe(policy: dict[str, Any], registry: pd.DataFr
     default_keys = [str(v) for v in configured.get("signal_keys", [])]
     rare_keys = [f"{row.phase}::{row.candidate_id}" for row in registry.itertuples(index=False) if _is_rare_row(row)]
     registry_keys = set(registry["phase"].astype(str) + "::" + registry["candidate_id"].astype(str))
+    quarantine_mask = registry["causality_review_status"].astype(str).eq("quarantined_noncausal_definition") | ~registry[
+        "ml_backfill_eligible"
+    ].map(_as_bool)
+    quarantine_keys = sorted(
+        registry.loc[quarantine_mask, "phase"].astype(str)
+        + "::"
+        + registry.loc[quarantine_mask, "candidate_id"].astype(str)
+    )
     missing = [key for key in default_keys if key not in registry_keys]
     overlap = sorted(set(default_keys).intersection(rare_keys))
+    quarantine_overlap = sorted(set(default_keys).intersection(quarantine_keys))
     if missing:
         raise ValueError(f"Policy default modules missing from registry: {missing}")
     if overlap:
         raise ValueError(f"Rare modules present in default scheduler universe: {overlap}")
+    if quarantine_overlap:
+        raise ValueError(f"Quarantined modules present in default scheduler universe: {quarantine_overlap}")
     return {
         "default_signal_keys": default_keys,
         "rare_signal_keys": sorted(rare_keys),
         "default_module_count": len(default_keys),
         "rare_module_count_excluded": len(rare_keys),
         "rare_modules_default_scheduler_included": False,
+        "quarantined_signal_keys": quarantine_keys,
+        "quarantined_module_count_excluded": len(quarantine_keys),
+        "quarantined_modules_default_scheduler_included": False,
     }
+
+
+def _as_bool(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    return str(value).strip().lower() in {"true", "1", "yes"}
 
 
 def _is_rare_row(row: Any) -> bool:
